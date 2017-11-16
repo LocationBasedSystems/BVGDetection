@@ -45,12 +45,13 @@
             </intent-filter>
         </activity>
 
+        <!-- Not used!
+        <provider android:authorities="ourContentProviderAuthorities"
+            android:name=".ContentProviderDB"
+            android:exported="false"
+            android:syncable="true"/>
+            !-->
+
     </application>
-
-
-    <provider android:authorities="ourContentProviderAuthorities"
-        android:name=".ContentProviderDB"
-        android:exported="false"
-        android:syncable="true"/>/>
 
 </manifest>
