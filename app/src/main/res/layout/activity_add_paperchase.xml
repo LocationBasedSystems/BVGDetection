@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.AddPaperchaseActivity">
+
+    <LinearLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="0px"
+        android:layout_height="0px"/>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/add_paperchase_name_layout">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/add_paperchase_name"
+            android:hint="Name der Schnitzeljagd"
+            android:layout_alignParentTop="true"
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/add_paperchase_description_layout"
+        android:layout_below="@+id/add_paperchase_name_layout">
+        <EditText
+            android:id="@+id/add_paperchase_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:maxLines="4"
+            android:hint="Beschreibung der Schnitzeljagd" />
+    </android.support.design.widget.TextInputLayout>
+
+    <de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.MySwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/add_paperchase_description_layout">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <com.woxthebox.draglistview.DragListView
+                android:id="@+id/add_paperchase_draglist"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </FrameLayout>
+    </de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.MySwipeRefreshLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_add_clue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="16dp"
+        android:onClick="fabClicked"
+        android:src="@android:drawable/ic_input_add"
+        android:tint="@android:color/white"
+        />
+</RelativeLayout>

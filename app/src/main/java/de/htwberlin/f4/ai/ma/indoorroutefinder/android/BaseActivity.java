@@ -23,6 +23,7 @@ import de.htwberlin.f4.ai.ma.indoorroutefinder.ImportExportActivity;
 //import de.htwberlin.f4.ai.ma.indoorroutefinder.NodeRecordActivity;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.NodeRecordEditActivity;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.SettingsActivity;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.PaperchaseMainActivity;
 
 /**
  * BasicActivity Class
@@ -84,6 +85,10 @@ public class BaseActivity extends AppCompatActivity {
                         drawerLayout.closeDrawers();
                         break;
 
+                    case R.id.nav_paperchase:
+                        loadPaperchase();
+                        drawerLayout.closeDrawers();
+                        break;
                     case R.id.nav_import:
                         loadImportExport();
                         drawerLayout.closeDrawers();
@@ -118,6 +123,8 @@ public class BaseActivity extends AppCompatActivity {
         });
     }
 
+
+
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -150,6 +157,12 @@ public class BaseActivity extends AppCompatActivity {
 
     public void loadRouteFinder() {
         Intent intent = new Intent(getApplicationContext(), RouteFinderActivity.class);
+        finish();
+        startActivity(intent);
+    }
+
+    private void loadPaperchase() {
+        Intent intent = new Intent(getApplicationContext(), PaperchaseMainActivity.class);
         finish();
         startActivity(intent);
     }

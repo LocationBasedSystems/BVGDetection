@@ -69,4 +69,8 @@ class NodeImpl implements Node {
         this.additionalInfo = additionalInfo;
     }
 
+    @Override
+    public String toString() { //TODO to delete
+        return this.getId();
+    }
 }

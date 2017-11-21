@@ -23,6 +23,9 @@
             android:icon="@drawable/find_route"
             android:title="Route finden" />
         <item
+            android:id="@+id/nav_paperchase"
+            android:title="Schnitzeljagd" />
+        <item
             android:id="@+id/nav_import"
             android:icon="@drawable/import_export"
             android:title="Import / Export" />

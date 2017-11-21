@@ -11,46 +11,56 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name="de.htwberlin.f4.ai.ma.indoorroutefinder.NodeListActivity" />
-        <activity android:name="de.htwberlin.f4.ai.ma.indoorroutefinder.MaxPictureActivity" />
-        <activity android:name="de.htwberlin.f4.ai.ma.indoorroutefinder.NodeShowActivity" />
-        <activity android:name="de.htwberlin.f4.ai.ma.indoorroutefinder.ShowFingerprintActivity"/>
-        <activity android:name="de.htwberlin.f4.ai.ma.indoorroutefinder.ImportExportActivity" />
-        <activity android:name="de.htwberlin.f4.ai.ma.indoorroutefinder.EdgesManagerActivity" />
-        <activity android:name="de.htwberlin.f4.ai.ma.indoorroutefinder.RouteFinderActivity" />
-        <activity android:name="de.htwberlin.f4.ai.ma.indoorroutefinder.LocationActivity" />
-        <activity android:name="de.htwberlin.f4.ai.ma.indoorroutefinder.SettingsActivity" />
-
-        <activity android:name="de.htwberlin.f4.ai.ma.indoorroutefinder.android.measure.MeasureViewImpl" />
-        <activity android:name="de.htwberlin.f4.ai.ma.indoorroutefinder.android.measure.barcode.BarcodeCaptureActivity" />
-        <activity android:name="de.htwberlin.f4.ai.ma.indoorroutefinder.android.record.RecordViewImpl" />
-        <activity android:name="de.htwberlin.f4.ai.ma.indoorroutefinder.android.calibrate.CalibrateViewImpl" />
-        <activity android:name="de.htwberlin.f4.ai.ma.indoorroutefinder.android.measure.edges.EdgeDetailsViewImpl"
-            android:windowSoftInputMode="stateHidden"/>
-
+        <activity android:name=".NodeListActivity" />
+        <activity android:name=".MaxPictureActivity" />
+        <activity android:name=".NodeShowActivity" />
+        <activity android:name=".ShowFingerprintActivity" />
+        <activity android:name=".ImportExportActivity" />
+        <activity android:name=".EdgesManagerActivity" />
+        <activity android:name=".RouteFinderActivity" />
+        <activity android:name=".LocationActivity" />
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".android.measure.MeasureViewImpl" />
+        <activity android:name=".android.measure.barcode.BarcodeCaptureActivity" />
+        <activity android:name=".android.record.RecordViewImpl" />
+        <activity android:name=".android.calibrate.CalibrateViewImpl" />
         <activity
-            android:name="de.htwberlin.f4.ai.ma.indoorroutefinder.NodeRecordEditActivity"
+            android:name=".android.measure.edges.EdgeDetailsViewImpl"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".paperchase.PaperchaseMainActivity" />
+        <activity
+            android:name=".paperchase.AddPaperchaseActivity"
+            android:parentActivityName=".paperchase.PaperchaseMainActivity"
+            android:theme="@style/GreenActionBarTheme"/>
+        <activity
+            android:name=".paperchase.AddCluesActivity"
+            android:parentActivityName=".paperchase.AddPaperchaseActivity"
+            android:theme="@style/GreenActionBarTheme"/>
+        <activity
+            android:name=".NodeRecordEditActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- Not used!
+        <!--
+        Not used!
         <provider android:authorities="ourContentProviderAuthorities"
             android:name=".ContentProviderDB"
             android:exported="false"
             android:syncable="true"/>
-            !-->
+            !
+        -->
+
 
     </application>
 
