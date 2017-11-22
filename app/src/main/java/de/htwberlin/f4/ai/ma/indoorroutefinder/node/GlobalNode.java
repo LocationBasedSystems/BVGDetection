@@ -16,20 +16,18 @@ public class GlobalNode implements Node {
     private Fingerprint fingerprint;
     private String coordinates;
     private String picturePath;
-    private boolean localCoordinatesCalculated;
-    private boolean globalCoordinatesCalculated;
+    private double globalCalculationInaccuracyRating;
     private double latitude;
     private double longitude;
     private double altitude;
 
-    public GlobalNode(String id, String description, Fingerprint fingerprint, String coordinates, String picturePath, boolean localCoordinatesCalculated, boolean globalCoordinatesCalculated, double latitude, double longitude, double altitude) {
+    public GlobalNode(String id, String description, Fingerprint fingerprint, String coordinates, String picturePath, double globalCalculationInaccuracyRating, double latitude, double longitude, double altitude) {
         this.id = id;
         this.description = description;
         this.fingerprint = fingerprint;
         this.coordinates = coordinates;
         this.picturePath = picturePath;
-        this.localCoordinatesCalculated = localCoordinatesCalculated;
-        this.globalCoordinatesCalculated = globalCoordinatesCalculated;
+        this.globalCalculationInaccuracyRating = globalCalculationInaccuracyRating;
         this.latitude = latitude;
         this.longitude = longitude;
         this.altitude = altitude;
@@ -82,7 +80,7 @@ public class GlobalNode implements Node {
     @Override
     public String getAdditionalInfo() {
         Gson gson = new Gson();
-        AdditionalInfo info = new AdditionalInfo(this.localCoordinatesCalculated, this.globalCoordinatesCalculated, this.latitude, this.longitude, this.altitude);
+        AdditionalInfo info = new AdditionalInfo(this.globalCalculationInaccuracyRating, this.latitude, this.longitude, this.altitude);
         return gson.toJson(info);
     }
 
@@ -97,8 +95,7 @@ public class GlobalNode implements Node {
     }
 
     private void setAdditionalInfoFromObject(AdditionalInfo additionalInfo) {
-        this.localCoordinatesCalculated = additionalInfo.localCoordinatesCalculated;
-        this.globalCoordinatesCalculated = additionalInfo.globalCoordinatesCalculated;
+        this.globalCalculationInaccuracyRating = additionalInfo.globalCalculationInaccuracyRating;
         this.latitude = additionalInfo.latitude;
         this.longitude = additionalInfo.longitude;
         this.altitude = additionalInfo.altitude;
@@ -106,53 +103,73 @@ public class GlobalNode implements Node {
 
     private AdditionalInfo getAdditionalInfoAsObject() {
         AdditionalInfo result = new AdditionalInfo();
-        result.localCoordinatesCalculated = this.localCoordinatesCalculated;
-        result.globalCoordinatesCalculated = this.globalCoordinatesCalculated;
+        result.globalCalculationInaccuracyRating = this.globalCalculationInaccuracyRating;
         result.latitude = this.latitude;
         result.longitude = this.longitude;
         result.altitude = this.altitude;
         return result;
     }
 
+    public double getGlobalCalculationInaccuracyRating() {
+        return globalCalculationInaccuracyRating;
+    }
+
+    public void setGlobalCalculationInaccuracyRating(double globalCalculationInaccuracyRating) {
+        this.globalCalculationInaccuracyRating = globalCalculationInaccuracyRating;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getAltitude() {
+        return altitude;
+    }
+
+    public void setAltitude(double altitude) {
+        this.altitude = altitude;
+    }
+
     /**
      * Helperclass for serialization.
      */
     private class AdditionalInfo {
-        private boolean localCoordinatesCalculated;
-        private boolean globalCoordinatesCalculated;
+        private double globalCalculationInaccuracyRating;
         private double latitude;
         private double longitude;
         private double altitude;
 
         private AdditionalInfo() {
-            localCoordinatesCalculated = false;
-            globalCoordinatesCalculated = false;
+            this.globalCalculationInaccuracyRating = Double.NaN;
             latitude = Double.NaN;
             longitude = Double.NaN;
         }
 
-        public AdditionalInfo(boolean localCoordinatesCalculated, boolean globalCoordinatesCalculated, double latitude, double longitude, double altitude) {
-            this.localCoordinatesCalculated = localCoordinatesCalculated;
-            this.globalCoordinatesCalculated = globalCoordinatesCalculated;
+        public AdditionalInfo(double globalCalculationInaccuracyRating, double latitude, double longitude, double altitude) {
+            this.globalCalculationInaccuracyRating = globalCalculationInaccuracyRating;
             this.latitude = latitude;
             this.longitude = longitude;
             this.altitude = altitude;
         }
 
-        public boolean isLocalCoordinatesCalculated() {
-            return localCoordinatesCalculated;
+        public double getGlobalCalculationInaccuracyRating() {
+            return globalCalculationInaccuracyRating;
         }
 
-        public void setLocalCoordinatesCalculated(boolean localCoordinatesCalculated) {
-            this.localCoordinatesCalculated = localCoordinatesCalculated;
-        }
-
-        public boolean isGlobalCoordinatesCalculated() {
-            return globalCoordinatesCalculated;
-        }
-
-        public void setGlobalCoordinatesCalculated(boolean globalCoordinatesCalculated) {
-            this.globalCoordinatesCalculated = globalCoordinatesCalculated;
+        public void setGlobalCalculationInaccuracyRating(double globalCalculationInaccuracyRating) {
+            this.globalCalculationInaccuracyRating = globalCalculationInaccuracyRating;
         }
 
         public double getLatitude() {
