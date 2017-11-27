@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Indoor Route Finder</string>
+    <string name="app_name">Schnitzeljagd</string>
     <string name="pref_movingAverage_default">3</string>
 
     <!-- activity titles -->

@@ -47,6 +47,7 @@ import de.htwberlin.f4.ai.ma.indoorroutefinder.android.BaseActivity;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.fingerprint.AsyncResponse;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.fingerprint.Fingerprint;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.fingerprint.FingerprintTask;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.node.GlobalNode;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.node.Node;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.node.NodeFactory;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandler;
@@ -127,6 +128,7 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
     private TextView gpsAccuracyTextView;
     private GoogleApiClient googleApiClient;
     private Location location;
+    private String globalPositionInfo;
 
 
     @Override
@@ -393,10 +395,34 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
             public void onClick(View v) {
                 Toast.makeText(NodeRecordEditActivity.this, "GPS-Fix Accuracy: +/-" + location.getAccuracy() + "m", Toast.LENGTH_SHORT).show();
                 if (updateMode) {
-                    //TODO
+                    GlobalNode tempNode = new GlobalNode(nodeToUpdate);
+                    //TODO Check for existing coords and show replacement dialogue
+                    tempNode.setLatitude(location.getLatitude());
+                    tempNode.setLongitude(location.getLongitude());
+                    tempNode.setGlobalCalculationInaccuracyRating(location.getAccuracy());
+                    //TODO Altitude?
+                    /*
+                    if (location.hasAltitude()) {
+                        tempNode.setAltitude(location.getAltitude());
+                    }
+                    */
+                    nodeToUpdate.setAdditionalInfo(tempNode.getAdditionalInfo());
+                    //TODO Update calculated GPS coordinates by iterating all reachable nodes. This should be done when saving the node and not here.
                 }
                 else {
-                    //TODO
+                    //Create dummy GlobalNode to use built-in json serialization
+                    GlobalNode tempNode = new GlobalNode(null, null, null, null, null, Double.NaN, Double.NaN, Double.NaN, Double.NaN);
+                    tempNode.setLatitude(location.getLatitude());
+                    tempNode.setLongitude(location.getLongitude());
+                    tempNode.setGlobalCalculationInaccuracyRating(location.getAccuracy());
+                    //TODO Altitude?
+                    /*
+                    if (location.hasAltitude()) {
+                        tempNode.setAltitude(location.getAltitude());
+                    }
+                    */
+                    globalPositionInfo = tempNode.getAdditionalInfo();
+                    //TODO Change Additional Info String when saving new node from "" to globalPositionInfo.
                 }
             }
         });
@@ -720,7 +746,6 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
     @SuppressLint("MissingPermission")
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        //TODO GoogleApiClient is connected, start location Updates
         LocationRequest locationRequest = new LocationRequest();
         locationRequest.setInterval(100);
         locationRequest.setFastestInterval(100);
@@ -733,12 +758,13 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
 
     @Override
     public void onConnectionSuspended(int i) {
-        //TODO Suspend Locaion updates (disable GPS Button)
+        //TODO Suspend Location updates (disable GPS Button)
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         //TODO Failed to connect GoogleApiClient, GPS stays disabled, maybe display a toast
+        Toast.makeText(this, "Failed to connect Google API Client. GPS not available.", Toast.LENGTH_LONG).show();
     }
 
     @Override
