@@ -37,11 +37,11 @@
         <activity
             android:name=".paperchase.AddPaperchaseActivity"
             android:parentActivityName=".paperchase.PaperchaseMainActivity"
-            android:theme="@style/GreenActionBarTheme"/>
+            android:theme="@style/GreenActionBarTheme" />
         <activity
             android:name=".paperchase.AddCluesActivity"
             android:parentActivityName=".paperchase.AddPaperchaseActivity"
-            android:theme="@style/GreenActionBarTheme"/>
+            android:theme="@style/GreenActionBarTheme" />
         <activity
             android:name=".NodeRecordEditActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -60,8 +60,6 @@
             android:syncable="true"/>
             !
         -->
-
-
     </application>
 
 </manifest>

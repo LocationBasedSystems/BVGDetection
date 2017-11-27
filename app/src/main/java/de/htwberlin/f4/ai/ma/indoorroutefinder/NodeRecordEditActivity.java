@@ -1,12 +1,14 @@
 package de.htwberlin.f4.ai.ma.indoorroutefinder;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -15,6 +17,8 @@ import android.os.Environment;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +33,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+
 import java.io.File;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -69,7 +79,7 @@ import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.JSON.JSONWriter;
  *
  */
 
-public class NodeRecordEditActivity extends BaseActivity implements AsyncResponse {
+public class NodeRecordEditActivity extends BaseActivity implements AsyncResponse, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private String picturePath;
     private String oldNodeId = null;
@@ -112,6 +122,11 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
     private static final int CAM_REQUEST = 1;
     RelativeLayout buttonsLayout;
 
+    //Added for GPS functionality
+    private ImageButton gpsButton;
+    private TextView gpsAccuracyTextView;
+    private GoogleApiClient googleApiClient;
+    private Location location;
 
 
     @Override
@@ -121,13 +136,20 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
         getLayoutInflater().inflate(R.layout.activity_node_record_edit, contentFrameLayout);
         setTitle(getString(R.string.title_activity_recordedit_rec));
 
-
-        permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA};
+        permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION};
 
         // Check permissions
         if (!hasPermissions(this, permissions)) {
             ActivityCompat.requestPermissions(NodeRecordEditActivity.this, permissions, ASK_MULTIPLE_PERMISSION_REQUEST_CODE);
         }
+
+        // Google API Client (for GPS)
+        this.googleApiClient = new GoogleApiClient.Builder(context)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        this.googleApiClient.connect();
 
         databaseHandler = DatabaseHandlerFactory.getInstance(this);
         JSONWriter = new JSONWriter();
@@ -154,6 +176,10 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
 
         buttonsLayout = (RelativeLayout) findViewById(R.id.buttons_layout_rec_and_edit);
 
+        //GPS expansion
+        gpsButton = (ImageButton) findViewById(R.id.gps_location_button);
+        gpsAccuracyTextView = (TextView) findViewById(R.id.gps_accuracy_textview);
+
         picturePath = null;
 
         pictureTaken = false;
@@ -170,6 +196,8 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
 
         recordButton.setImageResource(R.drawable.fingerprint);
         captureButton.setImageResource(R.drawable.camera);
+        gpsButton.setImageResource(R.drawable.gps_icon_low_contrast);
+        gpsButton.setEnabled(false);
 
         progressBar.setVisibility(View.INVISIBLE);
         progressTextview.setVisibility(View.INVISIBLE);
@@ -357,6 +385,21 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
                 }
             }
         });
+
+        // GPS extension
+
+        gpsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(NodeRecordEditActivity.this, "GPS-Fix Accuracy: +/-" + location.getAccuracy() + "m", Toast.LENGTH_SHORT).show();
+                if (updateMode) {
+                    //TODO
+                }
+                else {
+                    //TODO
+                }
+            }
+        });
     }
 
 
@@ -431,6 +474,7 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
                                 .setCancelable(false)
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
+                                        //TODO Add AdditionalInfo here!
                                         final Node node = NodeFactory.createInstance(nodeID, nodeDescription, null, "", picPathToSave, "");
                                         JSONWriter.writeJSON(node);
                                         databaseHandler.insertNode(node);
@@ -449,6 +493,7 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
 
                     // If a fingerprint has been captured...
                     } else {
+                        //TODO Add AdditionalInfo here!
                         final Node node = NodeFactory.createInstance(nodeID, nodeDescription, fingerprint, "", picPathToSave, "");
                         JSONWriter.writeJSON(node);
                         databaseHandler.insertNode(node);
@@ -528,7 +573,7 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
                         .setCancelable(false)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                final Node node = NodeFactory.createInstance(nodeID, nodeDescription, null, coordinates, picPathToSave, "");
+                                final Node node = NodeFactory.createInstance(nodeID, nodeDescription, null, coordinates, picPathToSave, nodeToUpdate.getAdditionalInfo());
                                 JSONWriter.writeJSON(node);
                                 databaseHandler.updateNode(node, oldNodeId);
                                 Toast.makeText(context, getString(R.string.node_saved_toast), Toast.LENGTH_LONG).show();
@@ -640,6 +685,8 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
         if (!hasPermissions(this, permissions)) {
             ActivityCompat.requestPermissions(NodeRecordEditActivity.this, permissions, ASK_MULTIPLE_PERMISSION_REQUEST_CODE);
         }
+
+        googleApiClient.connect();
     }
 
     /**
@@ -659,6 +706,49 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
                     fingerprintTask.cancel(false);
                 }
             }
+        }
+
+        if (googleApiClient.isConnected()) {
+            //noinspection deprecation
+            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+            googleApiClient.disconnect();
+            this.gpsButton.setEnabled(false);
+            this.gpsButton.setImageResource(R.drawable.gps_icon_low_contrast);
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        //TODO GoogleApiClient is connected, start location Updates
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(100);
+        locationRequest.setFastestInterval(100);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        if (hasPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION})) {
+            //noinspection deprecation
+            LocationServices.FusedLocationApi.requestLocationUpdates(this.googleApiClient, locationRequest, this);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        //TODO Suspend Locaion updates (disable GPS Button)
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        //TODO Failed to connect GoogleApiClient, GPS stays disabled, maybe display a toast
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        if (location != null) {
+            //Altitude is indicator of GPS fix
+            this.location = location;
+            this.gpsButton.setEnabled(true);
+            this.gpsButton.setImageResource(R.drawable.gps_icon);
+            gpsAccuracyTextView.setText("+/- " + this.location.getAccuracy() + "m");
         }
     }
 }

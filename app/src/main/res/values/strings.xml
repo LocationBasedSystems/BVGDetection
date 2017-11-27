@@ -151,6 +151,8 @@
     <string name="delete_button_text">Löschen</string>
     <string name="delete_title_question">Löschen?</string>
     <string name="please_try_again">Bitte erneut versuchen</string>
+    <string name="locate_via_gps_button_text">GPS Koordinaten ermitteln</string>
+    <string name="current_gps_accuracy">Akt. GPS-Genauigkeit:</string>
 
 
 </resources>

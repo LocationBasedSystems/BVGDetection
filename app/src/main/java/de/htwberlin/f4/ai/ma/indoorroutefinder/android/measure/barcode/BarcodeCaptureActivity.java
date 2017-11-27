@@ -52,6 +52,7 @@ import de.htwberlin.f4.ai.ma.indoorroutefinder.android.measure.camera.CameraSour
 import de.htwberlin.f4.ai.ma.indoorroutefinder.android.measure.camera.CameraSourcePreview;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * BarcodeCaptureActivity Class

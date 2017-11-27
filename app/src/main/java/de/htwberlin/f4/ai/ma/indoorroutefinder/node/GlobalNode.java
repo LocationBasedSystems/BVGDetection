@@ -5,9 +5,11 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import java.io.Serializable;
+
 import de.htwberlin.f4.ai.ma.indoorroutefinder.fingerprint.Fingerprint;
 
-public class GlobalNode implements Node {
+public class GlobalNode implements Node, Serializable {
 
     private static final String LOG_PREFIX = "GLOBALNODE";
 
@@ -90,15 +92,23 @@ public class GlobalNode implements Node {
         try {
             this.setAdditionalInfoFromObject(gson.fromJson(additionalInfo, AdditionalInfo.class));
         } catch (JsonSyntaxException e) {
-            Log.e(LOG_PREFIX, "Unable to parse additional info, ignoring...", e);
+            Log.d(LOG_PREFIX, "Unable to parse additional info, ignoring...", e);
         }
     }
 
     private void setAdditionalInfoFromObject(AdditionalInfo additionalInfo) {
-        this.globalCalculationInaccuracyRating = additionalInfo.globalCalculationInaccuracyRating;
-        this.latitude = additionalInfo.latitude;
-        this.longitude = additionalInfo.longitude;
-        this.altitude = additionalInfo.altitude;
+        if (additionalInfo == null) {
+            this.globalCalculationInaccuracyRating = Double.NaN;
+            this.latitude = Double.NaN;
+            this.longitude = Double.NaN;
+            this.altitude = Double.NaN;
+        }
+        else {
+            this.globalCalculationInaccuracyRating = additionalInfo.globalCalculationInaccuracyRating;
+            this.latitude = additionalInfo.latitude;
+            this.longitude = additionalInfo.longitude;
+            this.altitude = additionalInfo.altitude;
+        }
     }
 
     private AdditionalInfo getAdditionalInfoAsObject() {
@@ -142,10 +152,15 @@ public class GlobalNode implements Node {
         this.altitude = altitude;
     }
 
+    public Node getNode() {
+        Node result = NodeFactory.createInstance(this.id, this.description, this.fingerprint, this.coordinates, this.picturePath, this.getAdditionalInfo());
+        return result;
+    }
+
     /**
      * Helperclass for serialization.
      */
-    private class AdditionalInfo {
+    private class AdditionalInfo implements Serializable {
         private double globalCalculationInaccuracyRating;
         private double latitude;
         private double longitude;
@@ -153,8 +168,9 @@ public class GlobalNode implements Node {
 
         private AdditionalInfo() {
             this.globalCalculationInaccuracyRating = Double.NaN;
-            latitude = Double.NaN;
-            longitude = Double.NaN;
+            this.latitude = Double.NaN;
+            this.longitude = Double.NaN;
+            this.altitude = Double.NaN;
         }
 
         public AdditionalInfo(double globalCalculationInaccuracyRating, double latitude, double longitude, double altitude) {
