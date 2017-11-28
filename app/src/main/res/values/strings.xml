@@ -153,6 +153,7 @@
     <string name="please_try_again">Bitte erneut versuchen</string>
     <string name="locate_via_gps_button_text">GPS Koordinaten ermitteln</string>
     <string name="current_gps_accuracy">Akt. GPS-Genauigkeit:</string>
+    <string name="node_gps_accuracy">Node GPS-Genauigkeit:</string>
 
 
 </resources>
