@@ -20,6 +20,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -41,6 +42,7 @@ import com.google.android.gms.location.LocationServices;
 
 import java.io.File;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.android.BaseActivity;
@@ -126,9 +128,13 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
     //Added for GPS functionality
     private ImageButton gpsButton;
     private TextView gpsAccuracyTextView;
+    private TextView nodeGpsAccuracyTextView;
     private GoogleApiClient googleApiClient;
     private Location location;
     private String globalPositionInfo;
+    private boolean gpsSet = false;
+
+    private final DecimalFormat decimalFormat = new DecimalFormat("#0.00");
 
 
     @Override
@@ -181,6 +187,7 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
         //GPS expansion
         gpsButton = (ImageButton) findViewById(R.id.gps_location_button);
         gpsAccuracyTextView = (TextView) findViewById(R.id.gps_accuracy_textview);
+        nodeGpsAccuracyTextView = (TextView) findViewById(R.id.node_gps_accuracy_textview);
 
         picturePath = null;
 
@@ -298,50 +305,58 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
                     startActivity(intent);
                 }
             });
+
+            //GPS extension
+            GlobalNode tempNode = new GlobalNode(nodeToUpdate);
+            if (tempNode.hasGlobalCoordinates()) {
+                gpsButton.setImageResource(R.drawable.gps_icon_done);
+                nodeGpsAccuracyTextView.setText("+/- " + decimalFormat.format(tempNode.getGlobalCalculationInaccuracyRating()) + "m");
+                gpsSet = true;
+            }
         }
 
 
         saveNodeButton.setImageResource(R.drawable.save);
 
         recordButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    if (nodeIdEdittext.getText().toString().equals("")){
-                        Toast.makeText(getApplicationContext(), getString(R.string.please_enter_node_name), Toast.LENGTH_SHORT).show();
-                    } else if (databaseHandler.checkIfNodeExists(nodeIdEdittext.getText().toString()) && !updateMode) {
-                        Toast.makeText(getApplicationContext(), getString(R.string.node_already_exists_toast), Toast.LENGTH_SHORT).show();
-                    } else {
-                        recordButton.setEnabled(false);
-                        progressBar.setVisibility(View.VISIBLE);
-                        progressTextview.setVisibility(View.VISIBLE);
-                        recordButton.setImageResource(R.drawable.fingerprint_low_contrast);
-                        recordTime = minutesDropdown.getSelectedItemPosition() + 1;
+            public void onClick(View v) {
+                if (nodeIdEdittext.getText().toString().equals("")){
+                    Toast.makeText(getApplicationContext(), getString(R.string.please_enter_node_name), Toast.LENGTH_SHORT).show();
+                } else if (databaseHandler.checkIfNodeExists(nodeIdEdittext.getText().toString()) && !updateMode) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.node_already_exists_toast), Toast.LENGTH_SHORT).show();
+                } else {
+                    recordButton.setEnabled(false);
+                    progressBar.setVisibility(View.VISIBLE);
+                    progressTextview.setVisibility(View.VISIBLE);
+                    recordButton.setImageResource(R.drawable.fingerprint_low_contrast);
+                    recordTime = minutesDropdown.getSelectedItemPosition() + 1;
 
-                        verboseMode = sharedPreferences.getBoolean("verbose_mode", false);
-                        String ssidFilterString = null;
+                    verboseMode = sharedPreferences.getBoolean("verbose_mode", false);
+                    String ssidFilterString = null;
 
-                        if (verboseMode) {
-                            if (useSSIDfilter) {
-                                ssidFilterString = sharedPreferences.getString("default_wifi_network", null);
-                            }
-                            fingerprintTask = new FingerprintTask(ssidFilterString, 60 * recordTime, wifiManager, false, progressBar, progressTextview, infobox);
-                        } else {
-                            if (useSSIDfilter) {
-                                ssidFilterString = sharedPreferences.getString("default_wifi_network", null);
-                            }
-                            infobox.setText(getString(R.string.please_stay));
-                            fingerprintTask = new FingerprintTask(ssidFilterString, 60 * recordTime, wifiManager, false, progressBar, progressTextview);
+                    if (verboseMode) {
+                        if (useSSIDfilter) {
+                            ssidFilterString = sharedPreferences.getString("default_wifi_network", null);
                         }
-
-                        fingerprintTask.delegate = NodeRecordEditActivity.this;
-                        fingerprintTask.execute();
+                        fingerprintTask = new FingerprintTask(ssidFilterString, 60 * recordTime, wifiManager, false, progressBar, progressTextview, infobox);
+                    } else {
+                        if (useSSIDfilter) {
+                            ssidFilterString = sharedPreferences.getString("default_wifi_network", null);
+                        }
+                        infobox.setText(getString(R.string.please_stay));
+                        fingerprintTask = new FingerprintTask(ssidFilterString, 60 * recordTime, wifiManager, false, progressBar, progressTextview);
                     }
+
+                    fingerprintTask.delegate = NodeRecordEditActivity.this;
+                    fingerprintTask.execute();
                 }
+            }
         });
 
 
         captureButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            @Override
+            public void onClick(View view) {
                 if (nodeIdEdittext.getText().toString().equals("")){
                     Toast.makeText(getApplicationContext(), getString(R.string.please_enter_node_name), Toast.LENGTH_SHORT).show();
                 } else {
@@ -354,7 +369,7 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
                     cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
                     startActivityForResult(cameraIntent, CAM_REQUEST);
                 }
-                }
+            }
         });
 
 
@@ -393,10 +408,10 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
         gpsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //TODO Remove Toast?
                 Toast.makeText(NodeRecordEditActivity.this, "GPS-Fix Accuracy: +/-" + location.getAccuracy() + "m", Toast.LENGTH_SHORT).show();
                 if (updateMode) {
-                    GlobalNode tempNode = new GlobalNode(nodeToUpdate);
-                    //TODO Check for existing coords and show replacement dialogue
+                    final GlobalNode tempNode = new GlobalNode(nodeToUpdate);
                     tempNode.setLatitude(location.getLatitude());
                     tempNode.setLongitude(location.getLongitude());
                     tempNode.setGlobalCalculationInaccuracyRating(location.getAccuracy());
@@ -406,12 +421,34 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
                         tempNode.setAltitude(location.getAltitude());
                     }
                     */
-                    nodeToUpdate.setAdditionalInfo(tempNode.getAdditionalInfo());
+                    GlobalNode tempNode2 = new GlobalNode(nodeToUpdate);
+                    if (tempNode2.hasGlobalCoordinates() && (tempNode2.getGlobalCalculationInaccuracyRating() < tempNode.getGlobalCalculationInaccuracyRating())) {
+                        new AlertDialog.Builder(NodeRecordEditActivity.this)
+                                .setTitle("Alte Koordinaten genauer!")
+                                .setMessage("Die alten GPS-Koordinaten sind genauer als die neuen! Trotzdem ersetzen?")
+                                .setCancelable(false)
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        nodeToUpdate.setAdditionalInfo(tempNode.getAdditionalInfo());
+                                    }
+                                })
+                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                })
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
+                    }
+                    else {
+                        nodeToUpdate.setAdditionalInfo(tempNode.getAdditionalInfo());
+                        gpsButton.setImageResource(R.drawable.gps_icon_done);
+                        nodeGpsAccuracyTextView.setText("+/- " + decimalFormat.format(tempNode.getGlobalCalculationInaccuracyRating()) + "m");
+                    }
                     //TODO Update calculated GPS coordinates by iterating all reachable nodes. This should be done when saving the node and not here.
                 }
                 else {
                     //Create dummy GlobalNode to use built-in json serialization
-                    GlobalNode tempNode = new GlobalNode(null, null, null, null, null, Double.NaN, Double.NaN, Double.NaN, Double.NaN);
+                    final GlobalNode tempNode = new GlobalNode(null, null, null, null, null, Double.NaN, Double.NaN, Double.NaN, Double.NaN);
                     tempNode.setLatitude(location.getLatitude());
                     tempNode.setLongitude(location.getLongitude());
                     tempNode.setGlobalCalculationInaccuracyRating(location.getAccuracy());
@@ -421,9 +458,36 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
                         tempNode.setAltitude(location.getAltitude());
                     }
                     */
-                    globalPositionInfo = tempNode.getAdditionalInfo();
-                    //TODO Change Additional Info String when saving new node from "" to globalPositionInfo.
+                    GlobalNode tempNode2 = new GlobalNode(null, null, null, null, null, Double.NaN, Double.NaN, Double.NaN, Double.NaN);
+                    tempNode2.setAdditionalInfo(globalPositionInfo);
+                    if (tempNode2.hasGlobalCoordinates() && (tempNode2.getGlobalCalculationInaccuracyRating() < tempNode.getGlobalCalculationInaccuracyRating())) {
+                        new AlertDialog.Builder(NodeRecordEditActivity.this)
+                                .setTitle("Alte Koordinaten genauer!")
+                                .setMessage("Die alten GPS-Koordinaten sind genauer als die neuen! Trotzdem ersetzen?")
+                                .setCancelable(false)
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        globalPositionInfo = tempNode.getAdditionalInfo();
+                                        nodeGpsAccuracyTextView.setText("+/- " + decimalFormat.format(tempNode.getGlobalCalculationInaccuracyRating()) + "m");
+                                        gpsButton.setImageResource(R.drawable.gps_icon_done);
+                                        //TODO Change Additional Info String when saving new node from "" to globalPositionInfo.
+                                    }
+                                })
+                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                })
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
+                    }
+                    else {
+                        globalPositionInfo = tempNode.getAdditionalInfo();
+                        nodeGpsAccuracyTextView.setText("+/- " + decimalFormat.format(tempNode.getGlobalCalculationInaccuracyRating()) + "m");
+                        gpsButton.setImageResource(R.drawable.gps_icon_done);
+                        //TODO Change Additional Info String when saving new node from "" to globalPositionInfo.
+                    }
                 }
+                gpsSet = true;
             }
         });
     }
@@ -477,60 +541,71 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
             Toast.makeText(getApplicationContext(), getString(R.string.please_enter_node_name), Toast.LENGTH_SHORT).show();
         } else {
 
-                final String picPathToSave;
-                if (pictureTaken) {
-                    long realTimestamp = timestamp.getTime();
-                    picPathToSave = sdCard.getAbsolutePath() + "/IndoorPositioning/Pictures/" + nodeIdEdittext.getText() + "_" + realTimestamp + ".jpg";
-                } else {
-                    picPathToSave = null;
-                }
+            final String picPathToSave;
+            if (pictureTaken) {
+                long realTimestamp = timestamp.getTime();
+                picPathToSave = sdCard.getAbsolutePath() + "/IndoorPositioning/Pictures/" + nodeIdEdittext.getText() + "_" + realTimestamp + ".jpg";
+            } else {
+                picPathToSave = null;
+            }
 
-                final String nodeID = nodeIdEdittext.getText().toString();
-                final String nodeDescription = descriptionEdittext.getText().toString();
+            final String nodeID = nodeIdEdittext.getText().toString();
+            final String nodeDescription = descriptionEdittext.getText().toString();
 
-                if (databaseHandler.checkIfNodeExists(nodeIdEdittext.getText().toString())) {
-                    Toast.makeText(getApplicationContext(), getString(R.string.node_already_exists_toast), Toast.LENGTH_LONG).show();
-                } else {
+            if (databaseHandler.checkIfNodeExists(nodeIdEdittext.getText().toString())) {
+                Toast.makeText(getApplicationContext(), getString(R.string.node_already_exists_toast), Toast.LENGTH_LONG).show();
+            } else {
 
-                    // If no fingerprint has been captured...
-                    if (fingerprint == null) {
-                        new AlertDialog.Builder(this)
-                                .setTitle(getString(R.string.no_fingerprint_title_text))
-                                .setMessage("Soll der Ort \"" + nodeIdEdittext.getText().toString() + "\" wirklich ohne Fingerprint erstellt werden?")
-                                .setCancelable(false)
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //TODO Add AdditionalInfo here!
-                                        final Node node = NodeFactory.createInstance(nodeID, nodeDescription, null, "", picPathToSave, "");
-                                        JSONWriter.writeJSON(node);
-                                        databaseHandler.insertNode(node);
-                                        Toast.makeText(context, getString(R.string.node_saved_toast), Toast.LENGTH_LONG).show();
-                                        deleteOldPictures();
-                                        resetUiElements();
-                                        askForNewNode();
+                //TODO Maybe remove this dialog as no fingerprint can be the case with GPS points
+                // If no fingerprint has been captured...
+                if (fingerprint == null) {
+                    new AlertDialog.Builder(this)
+                            .setTitle(getString(R.string.no_fingerprint_title_text))
+                            .setMessage("Soll der Ort \"" + nodeIdEdittext.getText().toString() + "\" wirklich ohne Fingerprint erstellt werden?")
+                            .setCancelable(false)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Additional Info String
+                                    String additionalInfo = "";
+                                    if (globalPositionInfo != null) {
+                                        additionalInfo = globalPositionInfo;
                                     }
-                                })
-                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                    }
-                                })
-                                .setIcon(android.R.drawable.ic_dialog_alert)
-                                .show();
+
+                                    final Node node = NodeFactory.createInstance(nodeID, nodeDescription, null, "", picPathToSave, additionalInfo);
+                                    JSONWriter.writeJSON(node);
+                                    databaseHandler.insertNode(node);
+                                    Toast.makeText(context, getString(R.string.node_saved_toast), Toast.LENGTH_LONG).show();
+                                    deleteOldPictures();
+                                    resetUiElements();
+                                    askForNewNode();
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
 
                     // If a fingerprint has been captured...
-                    } else {
-                        //TODO Add AdditionalInfo here!
-                        final Node node = NodeFactory.createInstance(nodeID, nodeDescription, fingerprint, "", picPathToSave, "");
-                        JSONWriter.writeJSON(node);
-                        databaseHandler.insertNode(node);
-                        progressStatus = 0;
-                        progressTextview.setText(String.valueOf(progressStatus));
-                        progressBar.setProgress(progressStatus);
-                        Toast.makeText(context, getString(R.string.node_saved_toast), Toast.LENGTH_LONG).show();
-                        deleteOldPictures();
-                        askForNewNode();
+                } else {
+                    //Additional Info String
+                    String additionalInfo = "";
+                    if (globalPositionInfo != null) {
+                        additionalInfo = globalPositionInfo;
                     }
+
+                    final Node node = NodeFactory.createInstance(nodeID, nodeDescription, fingerprint, "", picPathToSave, additionalInfo);
+                    JSONWriter.writeJSON(node);
+                    databaseHandler.insertNode(node);
+                    progressStatus = 0;
+                    progressTextview.setText(String.valueOf(progressStatus));
+                    progressBar.setProgress(progressStatus);
+                    Toast.makeText(context, getString(R.string.node_saved_toast), Toast.LENGTH_LONG).show();
+                    deleteOldPictures();
+                    askForNewNode();
                 }
+            }
         }
     }
 
@@ -544,7 +619,7 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
         } else {
             if (oldNodeId.equals(nodeIdEdittext.getText().toString())) {
                 // old id == new id -> update.
-               saveUpdatedNode();
+                saveUpdatedNode();
             } else {
                 if (databaseHandler.checkIfNodeExists(nodeIdEdittext.getText().toString())) {
                     Toast.makeText(getApplicationContext(), getString(R.string.node_already_exists_toast), Toast.LENGTH_LONG).show();
@@ -589,10 +664,10 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
                 Intent intent = new Intent(context, NodeListActivity.class);
                 startActivity(intent);
 
-            // If no new fingerprint was taken and no old exists
+                // If no new fingerprint was taken and no old exists
             } else {
 
-            //if (nodeToUpdate.getFingerprint() == null) {
+                //if (nodeToUpdate.getFingerprint() == null) {
                 new AlertDialog.Builder(this)
                         .setTitle(getString(R.string.no_fingerprint_title_text))
                         .setMessage("Soll der Ort \"" + nodeIdEdittext.getText() + "\" wirklich ohne Fingerprint gespeichert werden?")
@@ -615,7 +690,7 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
                         .show();
             }
 
-        // If a new fingerprint was taken
+            // If a new fingerprint was taken
         } else {
             final Node node = NodeFactory.createInstance(nodeID, nodeDescription, fingerprint, coordinates, picPathToSave, nodeToUpdate.getAdditionalInfo());
             JSONWriter.writeJSON(node);
@@ -773,8 +848,13 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
             //Altitude is indicator of GPS fix
             this.location = location;
             this.gpsButton.setEnabled(true);
-            this.gpsButton.setImageResource(R.drawable.gps_icon);
-            gpsAccuracyTextView.setText("+/- " + this.location.getAccuracy() + "m");
+            if (!gpsSet) {
+                this.gpsButton.setImageResource(R.drawable.gps_icon);
+            }
+            else {
+                this.gpsButton.setImageResource(R.drawable.gps_icon_done);
+            }
+            gpsAccuracyTextView.setText("+/- " + decimalFormat.format(this.location.getAccuracy()) + "m");
         }
     }
 }

@@ -3,6 +3,7 @@ package de.htwberlin.f4.ai.ma.indoorroutefinder.node;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.Serializable;
@@ -81,18 +82,29 @@ public class GlobalNode implements Node, Serializable {
 
     @Override
     public String getAdditionalInfo() {
-        Gson gson = new Gson();
-        AdditionalInfo info = new AdditionalInfo(this.globalCalculationInaccuracyRating, this.latitude, this.longitude, this.altitude);
-        return gson.toJson(info);
+        if (this.globalCalculationInaccuracyRating == Double.NaN) {
+            return "";
+        }
+        else {
+            Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
+            AdditionalInfo info = new AdditionalInfo(this.globalCalculationInaccuracyRating, this.latitude, this.longitude, this.altitude);
+            return gson.toJson(info);
+        }
     }
 
     @Override
     public void setAdditionalInfo(String additionalInfo) {
-        Gson gson = new Gson();
-        try {
-            this.setAdditionalInfoFromObject(gson.fromJson(additionalInfo, AdditionalInfo.class));
-        } catch (JsonSyntaxException e) {
-            Log.d(LOG_PREFIX, "Unable to parse additional info, ignoring...", e);
+        if (additionalInfo != null && !additionalInfo.equals("")) {
+            Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
+            try {
+                this.setAdditionalInfoFromObject(gson.fromJson(additionalInfo, AdditionalInfo.class));
+            } catch (JsonSyntaxException e) {
+                Log.d(LOG_PREFIX, "Unable to parse additional info! Assuming none is set.", e);
+                this.setAdditionalInfoFromObject(null);
+            }
+        }
+        else {
+            this.setAdditionalInfoFromObject(null);
         }
     }
 
@@ -155,6 +167,14 @@ public class GlobalNode implements Node, Serializable {
     public Node getNode() {
         Node result = NodeFactory.createInstance(this.id, this.description, this.fingerprint, this.coordinates, this.picturePath, this.getAdditionalInfo());
         return result;
+    }
+
+    public boolean hasGlobalCoordinates() {
+        return this.globalCalculationInaccuracyRating != Double.NaN;
+    }
+
+    public boolean hasGlobalAltitude() {
+        return this.altitude != Double.NaN;
     }
 
     /**
