@@ -1,8 +1,12 @@
 package de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,16 +27,18 @@ public class ItemAdapter extends DragItemAdapter<Clue, ItemAdapter.ViewHolder> {
     private int mLayoutId;
     private int mGrabHandleId;
     private boolean mDragOnLongPress;
+    private RecyclerViewClickListener itemListener;
 
-    ItemAdapter(ArrayList<Clue> list, int layoutId, int grabHandleId, boolean dragOnLongPress) {
+    ItemAdapter(ArrayList<Clue> list, int layoutId, int grabHandleId, boolean dragOnLongPress, RecyclerViewClickListener itemListener) {
         mLayoutId = layoutId;
         mGrabHandleId = grabHandleId;
         mDragOnLongPress = dragOnLongPress;
+        this.itemListener = itemListener;
         setItemList(list);
     }
     @Override
     public long getUniqueItemId(int position) {
-        return position;
+        return getItemList().get(position).hashCode();
     }
 
     @Override
@@ -61,9 +67,10 @@ public class ItemAdapter extends DragItemAdapter<Clue, ItemAdapter.ViewHolder> {
             clueText = (TextView) itemView.findViewById(R.id.clue_list_item_cluetext);
         }
 
+
         @Override
         public void onItemClicked(View view) {
-            Toast.makeText(view.getContext(), "Item clicked", Toast.LENGTH_SHORT).show();
+            itemListener.recyclerViewListClicked(view, this.getLayoutPosition());
         }
 
         @Override

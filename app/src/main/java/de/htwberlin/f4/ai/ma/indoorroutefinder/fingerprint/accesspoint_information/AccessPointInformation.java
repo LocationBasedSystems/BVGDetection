@@ -1,5 +1,7 @@
 package de.htwberlin.f4.ai.ma.indoorroutefinder.fingerprint.accesspoint_information;
 
+import java.io.Serializable;
+
 /**
  * Created by Johann Winter
  *
@@ -7,7 +9,7 @@ package de.htwberlin.f4.ai.ma.indoorroutefinder.fingerprint.accesspoint_informat
  * every second for every accesspoint while fingerprinting process.
  */
 
-public interface AccessPointInformation {
+public interface AccessPointInformation extends Serializable{
 
     /**
      * Getter for the MAC-address of an access point

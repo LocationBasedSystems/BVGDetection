@@ -17,8 +17,8 @@
         android:gravity="start|center_vertical"
         android:padding="10dp"
         android:textColor="@android:color/white"
-        android:text="removed"
-        android:background="@color/colorPrimaryDark"
+        android:text="delete"
+        android:background="@color/light_gray"
         android:textSize="20sp"
         />
     <TextView
@@ -29,9 +29,9 @@
         android:layout_alignTop="@+id/item_layout"
         android:gravity="end|center_vertical"
         android:padding="10dp"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/light_gray"
         android:textColor="@android:color/white"
-        android:text="removed"
+        android:text="delete"
         android:textSize="20sp"
         />
 

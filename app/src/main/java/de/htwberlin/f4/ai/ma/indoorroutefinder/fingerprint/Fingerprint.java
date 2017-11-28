@@ -1,5 +1,6 @@
 package de.htwberlin.f4.ai.ma.indoorroutefinder.fingerprint;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -8,7 +9,7 @@ import java.util.List;
  * This interface is for fingerprints.
  */
 
-public interface Fingerprint {
+public interface Fingerprint extends Serializable {
 
     /**
      * Getter for the SSID (network name) of the measured wifi.

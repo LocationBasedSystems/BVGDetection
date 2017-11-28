@@ -4,7 +4,7 @@
     <item
         android:title="done"
         android:id="@+id/action_cart"
-        android:icon="@drawable/done_icon"
+        android:icon="@drawable/ic_done_black_48dp"
         android:orderInCategory="100"
         app:showAsAction="always" />
 </menu>

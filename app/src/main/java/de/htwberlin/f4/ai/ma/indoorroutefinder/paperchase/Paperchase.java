@@ -36,6 +36,11 @@ public class Paperchase implements Serializable {
         this.clueList = clueList;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     public String getName() {
         return name;
     }

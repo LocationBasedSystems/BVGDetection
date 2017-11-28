@@ -7,12 +7,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/clue_list_add_wrapper">
-        <CheckedTextView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/clue_list_add_name"
+            android:textColor="@android:color/black"
             android:gravity="center"
-            android:checkMark="?android:attr/listChoiceIndicatorMultiple"
             android:textSize="18dp"/>
 
         <TextView

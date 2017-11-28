@@ -1,5 +1,7 @@
 package de.htwberlin.f4.ai.ma.indoorroutefinder.node;
 
+import java.io.Serializable;
+
 import de.htwberlin.f4.ai.ma.indoorroutefinder.fingerprint.Fingerprint;
 
 /**
@@ -8,7 +10,7 @@ import de.htwberlin.f4.ai.ma.indoorroutefinder.fingerprint.Fingerprint;
  * This Interface is used to manage nodes ("Orte").
  */
 
-public interface Node {
+public interface Node extends Serializable{
 
     /**
      * Getter for the ID (name) of a node

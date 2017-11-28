@@ -1,5 +1,6 @@
 package de.htwberlin.f4.ai.ma.indoorroutefinder.fingerprint;
 
+import java.io.Serializable;
 import java.util.List;
 
 import de.htwberlin.f4.ai.ma.indoorroutefinder.fingerprint.accesspoint_information.AccessPointInformation;
@@ -11,7 +12,7 @@ import de.htwberlin.f4.ai.ma.indoorroutefinder.fingerprint.accesspoint_informati
  */
 
 
-public class SignalSample {
+public class SignalSample implements Serializable{
 
     private String timestamp;
     private List<AccessPointInformation> accessPointInformationList;

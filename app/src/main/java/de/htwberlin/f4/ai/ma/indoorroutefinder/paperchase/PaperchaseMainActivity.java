@@ -18,7 +18,7 @@ import de.htwberlin.f4.ai.ma.indoorroutefinder.android.BaseActivity;
 
 public class PaperchaseMainActivity extends BaseActivity {
 
-    private ArrayList<Paperchase> paperchaseList = new ArrayList<>();
+    private ArrayList<Paperchase> paperchaseList;
     private ArrayAdapter<Paperchase> arrayAdapter;
     private ListView listView;
     private FloatingActionButton fab;
@@ -33,30 +33,26 @@ public class PaperchaseMainActivity extends BaseActivity {
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
         getLayoutInflater().inflate(R.layout.activity_paperchase_main, contentFrameLayout);
 
+        paperchaseList = new ArrayList<>();
         emptyList = (TextView) findViewById(R.id.paperchase_list_empty);
         listView = (ListView) findViewById(R.id.paperchase_list);
         fab = (FloatingActionButton) findViewById(R.id.fab_add_paperchase);
 
-        arrayAdapter = new ArrayAdapter<Paperchase>(getApplicationContext(), android.R.layout.simple_list_item_1, paperchaseList);
+        arrayAdapter = new ArrayAdapter<Paperchase>(this, android.R.layout.simple_list_item_1, paperchaseList);
         listView.setAdapter(arrayAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Intent intent = new Intent(getApplicationContext(), SchnitzeljagdSpielenActivity.class);
-                //intent.putExtra("schnitzeljagd", paperchaseList.get(position));
-                //startActivityForResult(intent, 2);
-            }
-        });
+
         arrayAdapter.notifyDataSetChanged();
         listView.setEmptyView(emptyList);
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == 1) {
             if(resultCode == RESULT_OK){
-                //paperchaseList.add((Paperchase) data.getParcelableExtra("schnitzeljagd")); //TODO nodes serializable
-                //arrayAdapter.notifyDataSetChanged();
+                Paperchase paperchaseTemp = (Paperchase)data.getSerializableExtra("paperchase");
+                paperchaseList.add(paperchaseTemp);
+                arrayAdapter.notifyDataSetChanged();
             }
             else if(requestCode == RESULT_CANCELED){
                 Toast.makeText(getApplicationContext(), "Schnitzeljagderstellung abgebrochen", Toast.LENGTH_SHORT).show();

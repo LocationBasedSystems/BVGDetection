@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 import de.htwberlin.f4.ai.ma.indoorroutefinder.fingerprint.Fingerprint;
 
-public class GlobalNode implements Node, Serializable {
+public class GlobalNode implements Node {
 
     private static final String LOG_PREFIX = "GLOBALNODE";
 
