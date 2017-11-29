@@ -309,6 +309,7 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
             //GPS extension
             GlobalNode tempNode = new GlobalNode(nodeToUpdate);
             if (tempNode.hasGlobalCoordinates()) {
+                Toast.makeText(this, "Node has GPS Coords!", Toast.LENGTH_SHORT);
                 gpsButton.setImageResource(R.drawable.gps_icon_done);
                 nodeGpsAccuracyTextView.setText("+/- " + decimalFormat.format(tempNode.getGlobalCalculationInaccuracyRating()) + "m");
                 gpsSet = true;
@@ -443,6 +444,7 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
                         nodeToUpdate.setAdditionalInfo(tempNode.getAdditionalInfo());
                         gpsButton.setImageResource(R.drawable.gps_icon_done);
                         nodeGpsAccuracyTextView.setText("+/- " + decimalFormat.format(tempNode.getGlobalCalculationInaccuracyRating()) + "m");
+                        gpsSet = true;
                     }
                     //TODO Update calculated GPS coordinates by iterating all reachable nodes. This should be done when saving the node and not here.
                 }
@@ -470,6 +472,7 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
                                         globalPositionInfo = tempNode.getAdditionalInfo();
                                         nodeGpsAccuracyTextView.setText("+/- " + decimalFormat.format(tempNode.getGlobalCalculationInaccuracyRating()) + "m");
                                         gpsButton.setImageResource(R.drawable.gps_icon_done);
+                                        gpsSet = true;
                                         //TODO Change Additional Info String when saving new node from "" to globalPositionInfo.
                                     }
                                 })
@@ -484,10 +487,10 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
                         globalPositionInfo = tempNode.getAdditionalInfo();
                         nodeGpsAccuracyTextView.setText("+/- " + decimalFormat.format(tempNode.getGlobalCalculationInaccuracyRating()) + "m");
                         gpsButton.setImageResource(R.drawable.gps_icon_done);
+                        gpsSet = true;
                         //TODO Change Additional Info String when saving new node from "" to globalPositionInfo.
                     }
                 }
-                gpsSet = true;
             }
         });
     }
@@ -852,6 +855,7 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
                 this.gpsButton.setImageResource(R.drawable.gps_icon);
             }
             else {
+                Log.d("GPSDATA", "gpsSet=true");
                 this.gpsButton.setImageResource(R.drawable.gps_icon_done);
             }
             gpsAccuracyTextView.setText("+/- " + decimalFormat.format(this.location.getAccuracy()) + "m");
