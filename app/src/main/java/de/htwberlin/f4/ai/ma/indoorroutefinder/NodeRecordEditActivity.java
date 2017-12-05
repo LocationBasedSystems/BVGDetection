@@ -49,7 +49,8 @@ import de.htwberlin.f4.ai.ma.indoorroutefinder.android.BaseActivity;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.fingerprint.AsyncResponse;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.fingerprint.Fingerprint;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.fingerprint.FingerprintTask;
-import de.htwberlin.f4.ai.ma.indoorroutefinder.node.GlobalNode;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.gps.node.GlobalNode;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.gps.node.GlobalNodeFactory;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.node.Node;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.node.NodeFactory;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandler;
@@ -307,7 +308,7 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
             });
 
             //GPS extension
-            GlobalNode tempNode = new GlobalNode(nodeToUpdate);
+            GlobalNode tempNode = GlobalNodeFactory.createInstance(nodeToUpdate);
             if (tempNode.hasGlobalCoordinates()) {
                 Toast.makeText(this, "Node has GPS Coords!", Toast.LENGTH_SHORT);
                 gpsButton.setImageResource(R.drawable.gps_icon_done);
@@ -412,17 +413,14 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
                 //TODO Remove Toast?
                 Toast.makeText(NodeRecordEditActivity.this, "GPS-Fix Accuracy: +/-" + location.getAccuracy() + "m", Toast.LENGTH_SHORT).show();
                 if (updateMode) {
-                    final GlobalNode tempNode = new GlobalNode(nodeToUpdate);
+                    final GlobalNode tempNode = GlobalNodeFactory.createInstance(nodeToUpdate);
                     tempNode.setLatitude(location.getLatitude());
                     tempNode.setLongitude(location.getLongitude());
                     tempNode.setGlobalCalculationInaccuracyRating(location.getAccuracy());
-                    //TODO Altitude?
-                    /*
                     if (location.hasAltitude()) {
                         tempNode.setAltitude(location.getAltitude());
                     }
-                    */
-                    GlobalNode tempNode2 = new GlobalNode(nodeToUpdate);
+                    GlobalNode tempNode2 = GlobalNodeFactory.createInstance(nodeToUpdate);
                     if (tempNode2.hasGlobalCoordinates() && (tempNode2.getGlobalCalculationInaccuracyRating() < tempNode.getGlobalCalculationInaccuracyRating())) {
                         new AlertDialog.Builder(NodeRecordEditActivity.this)
                                 .setTitle("Alte Koordinaten genauer!")
@@ -450,17 +448,14 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
                 }
                 else {
                     //Create dummy GlobalNode to use built-in json serialization
-                    final GlobalNode tempNode = new GlobalNode(null, null, null, null, null, Double.NaN, Double.NaN, Double.NaN, Double.NaN);
+                    final GlobalNode tempNode = GlobalNodeFactory.createInstance(null, null, null, null, null, Double.NaN, Double.NaN, Double.NaN, Double.NaN);
                     tempNode.setLatitude(location.getLatitude());
                     tempNode.setLongitude(location.getLongitude());
                     tempNode.setGlobalCalculationInaccuracyRating(location.getAccuracy());
-                    //TODO Altitude?
-                    /*
                     if (location.hasAltitude()) {
                         tempNode.setAltitude(location.getAltitude());
                     }
-                    */
-                    GlobalNode tempNode2 = new GlobalNode(null, null, null, null, null, Double.NaN, Double.NaN, Double.NaN, Double.NaN);
+                    GlobalNode tempNode2 = GlobalNodeFactory.createInstance(null, null, null, null, null, Double.NaN, Double.NaN, Double.NaN, Double.NaN);
                     tempNode2.setAdditionalInfo(globalPositionInfo);
                     if (tempNode2.hasGlobalCoordinates() && (tempNode2.getGlobalCalculationInaccuracyRating() < tempNode.getGlobalCalculationInaccuracyRating())) {
                         new AlertDialog.Builder(NodeRecordEditActivity.this)
