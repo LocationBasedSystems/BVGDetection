@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:label="Schnitzeljagd"
+    android:orientation="horizontal"
     tools:context="de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.PaperchaseMainActivity">
 
     <ListView
@@ -19,7 +20,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20dp"
-        android:text="Zurzeit keine Schnitzeljagden verfügbar!"/>
+        android:text="Zurzeit keine Schnitzeljagden verfügbar!"
+        />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add_paperchase"
@@ -31,5 +33,7 @@
         android:onClick="fabClicked"
         android:src="@android:drawable/ic_input_add"
         android:tint="@android:color/white"
-        ></android.support.design.widget.FloatingActionButton>
+        >
+
+    </android.support.design.widget.FloatingActionButton>
 </RelativeLayout>

@@ -1,6 +1,7 @@
 package de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -50,6 +51,14 @@ public class ItemAdapter extends DragItemAdapter<Clue, ItemAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
+//        if(position == 0){
+//            holder.itemView.setBackgroundColor(Color.GRAY);
+//        }else if(position == mItemList.size() -1){
+//            holder.itemView.setBackgroundColor(Color.LTGRAY);
+//        }
+//        else{
+//            holder.itemView.setBackgroundColor(Color.WHITE);
+//        }
         String name = mItemList.get(position).getLoc().getId();
         String clue = mItemList.get(position).getClueText();
         holder.name.setText(name);
@@ -75,7 +84,7 @@ public class ItemAdapter extends DragItemAdapter<Clue, ItemAdapter.ViewHolder> {
 
         @Override
         public boolean onItemLongClicked(View view) {
-            Toast.makeText(view.getContext(), "Item long clicked", Toast.LENGTH_SHORT).show();
+            Toast.makeText(view.getContext(), "Sorry - wrong place to drag", Toast.LENGTH_SHORT).show();
             return true;
         }
     }

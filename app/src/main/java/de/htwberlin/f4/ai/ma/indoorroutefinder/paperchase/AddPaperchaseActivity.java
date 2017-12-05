@@ -61,7 +61,6 @@ public class AddPaperchaseActivity extends AppCompatActivity  implements  Recycl
         paperchaseDescription = (TextInputEditText) findViewById(R.id.add_paperchase_description);
         paperchase = new Paperchase("empty");
         fab = (FloatingActionButton)findViewById(R.id.fab_add_clue);
-        //generateDummyClues();
         refreshLayout = (MySwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         dragListView = (DragListView) findViewById(R.id.add_paperchase_draglist);
         dragListView.getRecyclerView().setVerticalScrollBarEnabled(true);
@@ -125,7 +124,12 @@ public class AddPaperchaseActivity extends AppCompatActivity  implements  Recycl
         }
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
-        builder.setTitle("Hinweis - Wie kommt man zum nächsten Ort?");
+        if(position == nodeList.size() -1){
+            builder.setTitle("Nachricht für das Erreichen des Ziels");
+        }
+        else {
+            builder.setTitle("Hinweis - Wie kommt man zum nächsten Ort?");
+        }
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -170,6 +174,10 @@ public class AddPaperchaseActivity extends AppCompatActivity  implements  Recycl
                     paperchaseDescription.setError("Beschreibung muss min 2 Zeichen haben");
                     err = true;
                 }
+                else if(paperchase.getClueList().size()<2){
+                    Toast.makeText(this, "Mindestens 2 Clues nötig!", Toast.LENGTH_SHORT).show();
+                    err = true;
+            }
                 for(Clue c : paperchase.getClueList()){
                     if(c.getClueText()==null || c.getClueText().length() < 1 || c.getClueText().equals("Klicke hier um Hinweis hinzuzufügen!")){
                         err = true;

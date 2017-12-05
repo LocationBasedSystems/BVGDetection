@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,7 +38,9 @@ public class AddCluesActivity extends AppCompatActivity {
 
     private ListView listView;
     ImageView checkImage;
+    TextInputEditText search;
     ArrayList<Node> nodeList;
+    ArrayList<Node> allNodesList;
     ArrayList<Node> checkedNodesList;
     DatabaseHandler databaseHandler;
     ArrayAdapter<Node> arrayAdapter;
@@ -47,10 +52,13 @@ public class AddCluesActivity extends AppCompatActivity {
         setTitle("Orte hinzufügen");
         listView = (ListView) findViewById(R.id.clue_list_add);
         checkImage = (ImageView) findViewById(R.id.add_clues_item_checkimage);
+        search = (TextInputEditText) findViewById(R.id.add_clues_search);
         databaseHandler = DatabaseHandlerFactory.getInstance(this);
         nodeList = new ArrayList<>();
+        allNodesList = new ArrayList<>();
         checkedNodesList = new ArrayList<>();
         nodeList.addAll(databaseHandler.getAllNodes());
+        allNodesList.addAll(databaseHandler.getAllNodes());
         arrayAdapter = new ClueAdapter(this, R.layout.add_from_all_clues_list_item, nodeList); //TODO custom item adapter
         listView.setAdapter(arrayAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -70,6 +78,33 @@ public class AddCluesActivity extends AppCompatActivity {
                 }
             }
         });
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                nodeList.clear();
+                nodeList.addAll(allNodesList);
+                ArrayList<Node> nodesToRemove = new ArrayList<>();
+                for(Node n :nodeList){
+                    if(!n.getId().startsWith(charSequence.toString())){
+                        nodesToRemove.add(n);
+                    }
+                }
+                nodeList.removeAll(nodesToRemove);
+                checkedNodesList.removeAll(nodesToRemove); //TODO checked wont work
+                arrayAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
     }
 
     private class ClueAdapter extends ArrayAdapter<Node>{
