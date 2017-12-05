@@ -1,5 +1,6 @@
-package de.htwberlin.f4.ai.ma.indoorroutefinder.node;
+package de.htwberlin.f4.ai.ma.indoorroutefinder.gps.node;
 
+import android.location.Location;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -9,8 +10,10 @@ import com.google.gson.JsonSyntaxException;
 import java.io.Serializable;
 
 import de.htwberlin.f4.ai.ma.indoorroutefinder.fingerprint.Fingerprint;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.node.Node;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.node.NodeFactory;
 
-public class GlobalNode implements Node {
+public class GlobalNodeImpl implements GlobalNode {
 
     private static final String LOG_PREFIX = "GLOBALNODE";
 
@@ -24,7 +27,7 @@ public class GlobalNode implements Node {
     private double longitude;
     private double altitude;
 
-    public GlobalNode(String id, String description, Fingerprint fingerprint, String coordinates, String picturePath, double globalCalculationInaccuracyRating, double latitude, double longitude, double altitude) {
+    GlobalNodeImpl(String id, String description, Fingerprint fingerprint, String coordinates, String picturePath, double globalCalculationInaccuracyRating, double latitude, double longitude, double altitude) {
         this.id = id;
         this.description = description;
         this.fingerprint = fingerprint;
@@ -36,7 +39,7 @@ public class GlobalNode implements Node {
         this.altitude = altitude;
     }
 
-    public GlobalNode(Node n) {
+    GlobalNodeImpl(Node n) {
         this.id = n.getId();
         this.description = n.getDescription();
         this.fingerprint = n.getFingerprint();
@@ -170,11 +173,25 @@ public class GlobalNode implements Node {
     }
 
     public boolean hasGlobalCoordinates() {
-        return this.globalCalculationInaccuracyRating != Double.NaN;
+        return !Double.isNaN(this.globalCalculationInaccuracyRating);
     }
 
     public boolean hasGlobalAltitude() {
-        return this.altitude != Double.NaN;
+        return !Double.isNaN(this.altitude);
+    }
+
+    @Override
+    public Location getLocation() {
+        if (hasGlobalCoordinates()) {
+            Location result = new Location("GlobalNode");
+            result.setLatitude(this.latitude);
+            result.setLongitude(this.longitude);
+            if (hasGlobalAltitude()) {
+                result.setAltitude(this.altitude);
+            }
+            return result;
+        }
+        return null;
     }
 
     /**
