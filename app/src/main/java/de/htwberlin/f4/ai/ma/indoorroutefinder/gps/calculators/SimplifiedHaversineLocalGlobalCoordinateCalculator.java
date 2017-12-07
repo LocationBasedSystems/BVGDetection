@@ -26,8 +26,8 @@ public class SimplifiedHaversineLocalGlobalCoordinateCalculator implements Local
             double longitude = source.getLongitude();
             double altitude = Double.NaN;
             double uncorrectedLongitudeWithUnchangedLatitude = longitude + (360 * offset[1] / 1000 / earthCircumference / Math.cos((Math.PI / 180) * latitude));
-            //Minus as latitudes get bigger to the south but coords are negative to south
-            latitude = correctLatitude(latitude - (360 * offset[0] / 1000 / earthCircumference));
+            //Plus as latitudes get smaller to the south and bigger to the north and vecor gives direction to north
+            latitude = correctLatitude(latitude + (360 * offset[0] / 1000 / earthCircumference));
             double uncorrectedLongitudeWithChangedLatitude = longitude + (360 * offset[1] / 1000 / earthCircumference / Math.cos((Math.PI / 180) * latitude));
             //Average longitude between point with first lat then long and point with first long then lat
             longitude = correctLongitude((uncorrectedLongitudeWithUnchangedLatitude + uncorrectedLongitudeWithChangedLatitude) / 2);
