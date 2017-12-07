@@ -13,6 +13,13 @@ import de.htwberlin.f4.ai.ma.indoorroutefinder.node.Node;
  *
  * The Dijkstra algorithm maps the common node and edge objects to its own DijkstraNode and
  * DijkstraEdge objects in order to avoid loading the model objects to the algorithm's logic.
+ *
+ * USE:
+ * For regular Dijkstra calculations you only need to run two methods:
+ * 1- execute() method by passing the ID (name) of the start-node of the wanted route as parameter
+ * 2- after that, run getPath() by passing the ID (name) of the destination-node as parameter,
+ *    to get the route.
+ *
  */
 
 public interface DijkstraAlgorithm {
