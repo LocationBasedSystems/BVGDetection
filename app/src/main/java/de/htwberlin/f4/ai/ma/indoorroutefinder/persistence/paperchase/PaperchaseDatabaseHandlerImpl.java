@@ -21,7 +21,7 @@ import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandlerFactor
 public class PaperchaseDatabaseHandlerImpl extends SQLiteOpenHelper implements PaperchaseDatabaseHandler {
 
     private static final String DATABASE_NAME = "paperchase_data.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private static final String PAPERCHASES_TABLE = "paperchases";
     private static final String CLUES_TABLE = "clues";
@@ -34,6 +34,7 @@ public class PaperchaseDatabaseHandlerImpl extends SQLiteOpenHelper implements P
     private static final String CLUE_HINT = "hint";
     private static final String CLUE_PAPERCHASE = "paperchase"; //FK
     private static final String CLUE_NODE = "node"; //FK
+    private static final String CLUE_PICTURE = "picture";
 
     private Context context;
 
@@ -53,15 +54,20 @@ public class PaperchaseDatabaseHandlerImpl extends SQLiteOpenHelper implements P
                 CLUE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 CLUE_INDEX + " INTEGER," +
                 CLUE_HINT + " TEXT," +
-                CLUE_NODE + " TEXT," + //TODO foreign key
-                CLUE_PAPERCHASE + " TEXT)"; //TODO foreign key
+                CLUE_NODE + " TEXT," +
+                CLUE_PAPERCHASE + " TEXT," +
+                CLUE_PICTURE + " TEXT)";
 
         db.execSQL(createPaperchaseTableQuery);
         db.execSQL(createClueTableQuery);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {    }
+    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+        db.execSQL("DROP TABLE IF EXISTS " + CLUES_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + PAPERCHASES_TABLE);
+        onCreate(db);
+    }
 
 
     @Override
@@ -138,11 +144,12 @@ public class PaperchaseDatabaseHandlerImpl extends SQLiteOpenHelper implements P
         values.put(CLUE_HINT, clue.getClueText());
         values.put(CLUE_NODE, clue.getLoc().getId());
         values.put(CLUE_PAPERCHASE, paperchaseName);
+        values.put(CLUE_PICTURE, clue.getHintPicturePath());
 
         database.insert(CLUES_TABLE, null, values);
 
         Log.d("DB: insert_clue:hint:", clue.getClueText());
-
+        //Log.d("DB:PATH-----:" , clue.getHintPicturePath());
         database.close();
     }
 
@@ -154,7 +161,7 @@ public class PaperchaseDatabaseHandlerImpl extends SQLiteOpenHelper implements P
         Clue clue  = null;
         Cursor cursor = database.rawQuery(selectQuery, null);
         if(cursor.moveToFirst() && databaseHandler.getNode(cursor.getString(3))!=null){
-            clue = new Clue(cursor.getString(2),cursor.getInt(1), databaseHandler.getNode(cursor.getString(3)));
+            clue = new Clue(cursor.getString(2),cursor.getInt(1), databaseHandler.getNode(cursor.getString(3)), cursor.getString(5));
         }
         return clue;
     }
@@ -169,7 +176,8 @@ public class PaperchaseDatabaseHandlerImpl extends SQLiteOpenHelper implements P
         if(cursor.moveToFirst()){
             do {
                 if(databaseHandler.getNode(cursor.getString(3))!=null) {
-                    clueList.add(new Clue(cursor.getString(2), cursor.getInt(1), databaseHandler.getNode(cursor.getString(3))));
+                    clueList.add(new Clue(cursor.getString(2), cursor.getInt(1), databaseHandler.getNode(cursor.getString(3)),cursor.getString(5)));
+                    //Log.d("DB:PATH GET ------:", cursor.getString(5));
                 }
             }while(cursor.moveToNext());
         }

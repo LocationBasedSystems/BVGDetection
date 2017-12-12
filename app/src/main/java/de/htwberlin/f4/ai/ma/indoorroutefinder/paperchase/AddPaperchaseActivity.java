@@ -2,6 +2,9 @@ package de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.ContextCompat;
@@ -11,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,6 +27,9 @@ import com.woxthebox.draglistview.DragListView;
 import com.woxthebox.draglistview.swipe.ListSwipeHelper;
 import com.woxthebox.draglistview.swipe.ListSwipeItem;
 
+import java.io.File;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import de.htwberlin.f4.ai.ma.indoorroutefinder.R;
@@ -31,6 +38,7 @@ import de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.models.Clue;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.models.Paperchase;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandler;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandlerFactory;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.FileUtilities;
 
 public class AddPaperchaseActivity extends AppCompatActivity  implements  RecyclerViewClickListener{
     private TextInputEditText paperchaseName;
@@ -40,6 +48,11 @@ public class AddPaperchaseActivity extends AppCompatActivity  implements  Recycl
     private ItemAdapter listAdapter;
     private FloatingActionButton fab;
     private MySwipeRefreshLayout refreshLayout;
+    private static final int CAM_REQUEST = 2;
+    private int clueWithPhotoPos = 0;
+    private File sdCard = Environment.getExternalStorageDirectory();
+    private Timestamp timestamp;
+
 
     ArrayList<Node> nodeList;
     DatabaseHandler databaseHandler;
@@ -147,8 +160,37 @@ public class AddPaperchaseActivity extends AppCompatActivity  implements  Recycl
                 dialog.cancel();
             }
         });
+        builder.setNeutralButton("+Foto", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
         final AlertDialog dialog = builder.create();
         dialog.show();
+        dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(input.getText().toString().length() < 1){
+                    input.setError("Bitte zuerst Hinweis eingeben");
+                }
+                else{
+                    paperchase.getClueList().get(position).setClueText(input.getText().toString());
+
+                    Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                    timestamp = new Timestamp(System.currentTimeMillis());
+                    String fileName = paperchase.getClueList().get(position).getClueText().toString();
+                    fileName = fileName.substring(0, Math.min(fileName.length(),10));
+                    File file = FileUtilities.getFile(fileName, timestamp);
+                    Log.d("CluePhoto----------", fileName);
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                    startActivityForResult(cameraIntent, CAM_REQUEST);
+                    clueWithPhotoPos = position;
+                    dialog.dismiss();
+                }
+            }
+        });
 
     }
 
@@ -227,6 +269,17 @@ public class AddPaperchaseActivity extends AppCompatActivity  implements  Recycl
                     }
                 case RESULT_CANCELED:
                     break;
+            }
+        }
+        else if(requestCode == CAM_REQUEST){
+            switch (resultCode){
+                case RESULT_OK:
+                    String fileName = paperchase.getClueList().get(clueWithPhotoPos).getClueText();
+                    fileName = fileName.substring(0, Math.min(fileName.length(),10));
+                    long realTimestamp = timestamp.getTime();
+                    paperchase.getClueList().get(clueWithPhotoPos).setHintPicturePath(sdCard.getAbsolutePath() + "/IndoorPositioning/Pictures/" + fileName + "_" + realTimestamp + ".jpg");
+                    listAdapter.notifyDataSetChanged();
+                    Log.d("File created-----------", paperchase.getClueList().get(clueWithPhotoPos).getHintPicturePath());
             }
         }
     }

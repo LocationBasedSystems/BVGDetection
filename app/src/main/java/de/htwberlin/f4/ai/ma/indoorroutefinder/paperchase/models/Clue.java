@@ -18,16 +18,6 @@ public class Clue implements Comparable<Clue>, Serializable{
     private String hintPicturePath = null;
 
 
-
-    public Clue(Node loc) {
-        this.loc = loc;
-    }
-
-    public Clue(String clueText) {
-        this.clueText = clueText;
-
-    }
-
     public Clue(String clueText, Node loc) {
         this.clueText = clueText;
         this.loc = loc;
@@ -39,7 +29,11 @@ public class Clue implements Comparable<Clue>, Serializable{
         this.loc = loc;
     }
 
-    public Clue() {
+    public Clue(String clueText, int idx, Node loc, String hintPicturePath) {
+        this.clueText = clueText;
+        this.idx = idx;
+        this.loc = loc;
+        this.hintPicturePath = hintPicturePath;
     }
 
 

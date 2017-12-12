@@ -64,10 +64,10 @@ public class PlayPaperchaseActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                  showingBigPictureAtTheMoment = true;
-                 Node tmpNode = paperchase.getClueList().get(currentClueId).getLoc();
-                 if (tmpNode.getPicturePath() != null && !tmpNode.getPicturePath().equals("")) {
+                 String tmpPath = paperchase.getClueList().get(currentClueId).getHintPicturePath();
+                 if (tmpPath != null && !tmpPath.equals("")) {
                     Intent intent = new Intent(getApplicationContext(), MaxPictureActivity.class);
-                    intent.putExtra("picturePath", tmpNode.getPicturePath());
+                    intent.putExtra("picturePath", tmpPath);
                     intent.putExtra("nodeID", "Hinweisbild");
                     intent.putExtra("isHint", true);
                     startActivity(intent);
@@ -89,9 +89,10 @@ public class PlayPaperchaseActivity extends AppCompatActivity {
         hintText.setText(paperchase.getClueList().get(currentClueId).getClueText());
 
         try {
-            if (paperchase.getClueList().get(currentClueId).getLoc().getPicturePath() != null && !paperchase.getClueList().get(currentClueId).getLoc().getPicturePath().equals("")) {
-                Log.d("PICTUREPATH---------", paperchase.getClueList().get(currentClueId).getLoc().getPicturePath());
-                Bitmap image = BitmapFactory.decodeFile(paperchase.getClueList().get(currentClueId).getLoc().getPicturePath());
+            Log.d("PICTUREPATH---------", paperchase.getClueList().get(currentClueId).getHintPicturePath());
+            if (paperchase.getClueList().get(currentClueId).getHintPicturePath() != null && !paperchase.getClueList().get(currentClueId).getHintPicturePath().equals("")) {
+                Log.d("PICTUREPATH---------", paperchase.getClueList().get(currentClueId).getHintPicturePath());
+                Bitmap image = BitmapFactory.decodeFile(paperchase.getClueList().get(currentClueId).getHintPicturePath());
                 float scale = 0.2f;
                 Bitmap inputImage = Bitmap.createScaledBitmap(image, Math.round(image.getWidth() * scale), Math.round(image.getHeight() * scale), false);
                 Bitmap outputImage = Bitmap.createBitmap(inputImage);
