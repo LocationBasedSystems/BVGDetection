@@ -2,6 +2,7 @@ package de.htwberlin.f4.ai.ma.indoorroutefinder;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
@@ -27,9 +28,18 @@ public class MaxPictureActivity extends BaseActivity {
 
         maxImageView = (ImageView) findViewById(R.id.maxImageView);
 
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         String picturePath = (String) intent.getExtras().get("picturePath");
         setTitle((String) intent.getExtras().get("nodeID"));
+
+        maxImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(intent.getBooleanExtra("isHint", false)){
+                    finish();
+                }
+            }
+        });
 
         if (picturePath != null) {
             Glide.with(this).load(picturePath).into(maxImageView);

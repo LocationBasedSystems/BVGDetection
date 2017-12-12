@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:label="Schnitzeljagd"
+    android:label="@string/paperchase_main_title"
     android:orientation="horizontal"
     tools:context="de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.PaperchaseMainActivity">
 
@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20dp"
-        android:text="Zurzeit keine Schnitzeljagden verfügbar!"
+        android:text="@string/paperchase_main_empty_list"
         />
 
     <android.support.design.widget.FloatingActionButton

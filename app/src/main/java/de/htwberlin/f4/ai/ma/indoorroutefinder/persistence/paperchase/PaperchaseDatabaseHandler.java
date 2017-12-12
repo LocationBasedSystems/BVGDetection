@@ -3,8 +3,8 @@ package de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.paperchase;
 import java.util.ArrayList;
 
 
-import de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.Clue;
-import de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.Paperchase;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.models.Clue;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.models.Paperchase;
 
 /**
  * Created by Yannik on 05.12.2017.

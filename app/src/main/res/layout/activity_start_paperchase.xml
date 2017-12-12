@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:textSize="20dp"
         android:padding="10dp"
-        android:text="Beschreibung:"
+        android:text="@string/start_paperchase_description"
         android:textColor="@android:color/black"
         android:textAlignment="center" />
 
@@ -23,12 +23,15 @@
         android:layout_height="wrap_content"
         android:text="ganz langer testtext blalf asol dnasd saoldn asoldnola sd
         owjaoldjn aoliwjdn oliajdnwoiand lkawnsa dnjsadjnasoldjn ashndkwahndhnakdsnkwakdsbnkwba
-        djkmbawjk dmbawkd nbjkawbh dkjuwbad jmhbwajkdmb jkmawbdjmhzawbdjkzhbawdj hwba jdkbwa"
+        djkmbawjk dmbawkd nbjkawbh dkjuwbad jmhbwajkdmb jkmawbdjmhzawbdjkzhbawdj hwba jdkbwa
+        der text ist nichtmal lang genug hnasd ujasd noihef doui adfohawoh dowa hdowhaodha owidowiahdoiawoid
+        oujhasd iuhsaol djnnasoljdn olasd olkasjd pjkw3poja lkdowipd jkwa jdpwajpdwjpkjd pw pdwmjn jetzt aber"
         android:textSize="15dp"
         android:textColor="@android:color/black"
         android:textAlignment="center"
         android:layout_below="@id/start_paperchase_name"
-        android:padding="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         android:scrollbars="vertical"
         android:maxHeight="130dp"
         android:paddingBottom="40dp"/>
@@ -43,7 +46,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/start_paperchase_node_hint"
-        android:text="Startpunkt der Schnitzeljagd:"
+        android:text="@string/start_paperchase_starting_point"
         android:textColor="@android:color/black"
         android:textSize="15dp"
         android:layout_below="@id/start_paperchase_description"
@@ -93,7 +96,7 @@
         android:layout_above="@+id/start_begin_paperchase"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"
-        android:text="Navigation"
+        android:text="@string/start_paperchase_navigation"
         android:textSize="20dp" />
 
     <Button
@@ -103,7 +106,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="65dp"
-        android:text="Beginne Schnitzeljagd"
+        android:text="@string/start_paperchase_begin"
         android:textSize="20dp" />
 
     <TextView
@@ -117,6 +120,6 @@
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:background="@drawable/info_box"
-        android:text="Die Schnitzeljagd kann erst begonnen werden, wenn du dich am Startpunkt befindest"
+        android:text="@string/start_paperchase_hint_text"
         android:layout_alignParentBottom="true"/>
 </RelativeLayout>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.PlayPaperchaseActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:id="@+id/play_paperchase_hint_title_text"
+        android:padding="10dp"
+        android:textColor="@android:color/black"
+        android:textSize="20dp"
+        android:text="@string/play_paperchase_hint_text"
+        android:textAlignment="center"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:textSize="15dp"
+        android:textColor="@android:color/black"
+        android:gravity="center"
+        android:text="blablabla ajsd jaspo jiduasojdolwiaj dohjawoiwkdj howaj dojawkslkdnj olwadiawh doaw
+        awddhowliajdolpaswijdpolwiajdpkjwapjdpwajd pwjad pjaws.lkidnjawolijd poaw jnoliawjdolaj dlaw-d---
+        dwajn bdolwahjdn lawjdm pjwaikd uhbakijdzgbvsjhdb awhndb ikaw dkiuahnn dsjkndwahb msndjwhabd masbdikjwa
+        wadb aikshnd kawndkjhabw d kiuwbadiku bhawkd bysmnndbawoi nedasdbhwk absdkiubub wdlbads
+        jb wa kdhnwak bdkjawbd kiawbhd kawbdk,alödjkiahndkwb akj sdbikowab daw dbkwa nbdwbnd lkoaw bdwal
+        wdk lhwak dhbwabdh kawbaklsdjkwaolhbda kjbwdkw kujawbdk awnbdkl,awnndöa sdowadkbsdkAK a asodo a"
+        android:layout_below="@id/play_paperchase_hint_title_text"
+        android:scrollbars="vertical"
+        android:padding="8dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/play_paperchase_hint"
+
+        />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:scaleType="centerCrop"
+        android:layout_above="@+id/play_paperchase_next_button"
+        android:id="@+id/play_paperchase_hint_image"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="15dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/play_paperchase_current_node_id"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="11dp"
+        android:text="Ort gefunden (For debug)"
+        android:id="@+id/play_paperchase_next_button" />
+
+    <TextView
+        android:id="@+id/play_paperchase_current_node_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/play_paperchase_hint_to_help"
+        android:text="Hier steht der aktuelle Nodename"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="13dp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:paddingTop="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:background="@drawable/info_box"
+        android:textAlignment="center"
+        android:text="@string/play_paperchase_hint_to_help"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/play_paperchase_hint_to_help" />
+
+</RelativeLayout>

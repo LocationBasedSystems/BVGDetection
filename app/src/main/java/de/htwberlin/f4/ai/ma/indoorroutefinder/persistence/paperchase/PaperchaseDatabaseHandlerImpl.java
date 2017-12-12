@@ -8,10 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.Clue;
-import de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.Paperchase;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.models.Clue;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.models.Paperchase;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandler;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandlerFactory;
 

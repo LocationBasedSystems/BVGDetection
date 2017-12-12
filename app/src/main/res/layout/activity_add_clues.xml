@@ -31,5 +31,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/add_clues_search_layout"></ListView>
+        android:layout_below="@+id/add_clues_search_layout">
+    </ListView>
 </RelativeLayout>

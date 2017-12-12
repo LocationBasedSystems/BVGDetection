@@ -13,14 +13,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import de.htwberlin.f4.ai.ma.indoorroutefinder.R;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.android.BaseActivity;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.models.Paperchase;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.paperchase.PaperchaseDatabaseHandler;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.paperchase.PaperchaseDatabaseHandlerFactory;
-import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.paperchase.PaperchaseDatabaseHandlerImpl;
 
 public class PaperchaseMainActivity extends BaseActivity {
 
@@ -34,7 +33,6 @@ public class PaperchaseMainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_paperchase_main);
         setTitle("Schnitzeljagd");
 
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
@@ -98,6 +96,14 @@ public class PaperchaseMainActivity extends BaseActivity {
             }
             else if(requestCode == RESULT_CANCELED){
                 Toast.makeText(getApplicationContext(), "Schnitzeljagderstellung abgebrochen", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else if(requestCode == 2){
+            if(resultCode == RESULT_OK){
+                Toast.makeText(this, "WAHNSINN!!! DIE SCHNITZELJAGD WURDE ERFOLGREICH GESCHAFFT!", Toast.LENGTH_SHORT).show();
+            }
+            else if(resultCode == RESULT_CANCELED){
+                Toast.makeText(this, "Schade, Schnitzeljagd abgebrochen", Toast.LENGTH_SHORT).show();;
             }
         }
     }
