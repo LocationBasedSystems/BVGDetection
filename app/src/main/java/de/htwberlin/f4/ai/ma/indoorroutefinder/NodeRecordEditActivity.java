@@ -673,7 +673,8 @@ public class NodeRecordEditActivity extends BaseActivity implements AsyncRespons
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 final Node node = NodeFactory.createInstance(nodeID, nodeDescription, null, coordinates, picPathToSave, nodeToUpdate.getAdditionalInfo());
-                                JSONWriter.writeJSON(node);
+                                //TODO Re-Enable JSON Dump
+                                //JSONWriter.writeJSON(node);
                                 databaseHandler.updateNode(node, oldNodeId);
                                 Toast.makeText(context, getString(R.string.node_saved_toast), Toast.LENGTH_LONG).show();
                                 deleteOldPictures();

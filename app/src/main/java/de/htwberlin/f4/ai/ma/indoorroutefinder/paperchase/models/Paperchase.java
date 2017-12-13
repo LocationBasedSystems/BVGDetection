@@ -1,10 +1,9 @@
-package de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase;
-
-import android.os.Parcel;
-import android.os.Parcelable;
+package de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.models.Clue;
 
 /**
  * Created by Yannik on 21.11.2017.
