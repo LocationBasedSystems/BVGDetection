@@ -9,12 +9,12 @@ import de.htwberlin.f4.ai.ma.indoorroutefinder.measurement.WKT;
  * @version 05.12.2017
  */
 
-public class SimplifiedHaversineLocalGlobalCoordinateCalculator implements LocalGlobalCoordinateCalculator {
+public class SimpleHaversineLocalGlobalCoordinateCalculator implements LocalGlobalCoordinateCalculator {
 
     // earth circumference in km
     private static final double earthCircumference = 40075.04;
 
-    SimplifiedHaversineLocalGlobalCoordinateCalculator() {
+    SimpleHaversineLocalGlobalCoordinateCalculator() {
     }
 
     @Override
