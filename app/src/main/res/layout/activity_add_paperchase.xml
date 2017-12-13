@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:maxLength="100"
             android:id="@+id/add_paperchase_name"
-            android:hint="Name der Schnitzeljagd"
+            android:hint="@string/add_paperchase_name_of_paperchase"
             android:inputType="textImeMultiLine|textCapSentences"
             android:imeOptions="actionDone"
             android:layout_alignParentTop="true"
@@ -43,7 +43,7 @@
             android:layout_alignParentStart="true"
             android:maxLines="4"
             android:inputType="textCapSentences|textMultiLine"
-            android:hint="Beschreibung der Schnitzeljagd" />
+            android:hint="@string/add_paperchase_description_of_paperchase" />
     </android.support.design.widget.TextInputLayout>
 
     <de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.MySwipeRefreshLayout

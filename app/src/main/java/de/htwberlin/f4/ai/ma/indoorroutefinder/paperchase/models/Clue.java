@@ -1,4 +1,4 @@
-package de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase;
+package de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.models;
 
 
 import android.support.annotation.NonNull;
@@ -15,15 +15,8 @@ public class Clue implements Comparable<Clue>, Serializable{
     private String clueText;
     private int idx;
     private Node loc;
+    private String hintPicturePath = null;
 
-    public Clue(Node loc) {
-        this.loc = loc;
-    }
-
-    public Clue(String clueText) {
-        this.clueText = clueText;
-
-    }
 
     public Clue(String clueText, Node loc) {
         this.clueText = clueText;
@@ -36,9 +29,21 @@ public class Clue implements Comparable<Clue>, Serializable{
         this.loc = loc;
     }
 
-    public Clue() {
+    public Clue(String clueText, int idx, Node loc, String hintPicturePath) {
+        this.clueText = clueText;
+        this.idx = idx;
+        this.loc = loc;
+        this.hintPicturePath = hintPicturePath;
     }
 
+
+    public String getHintPicturePath() {
+        return hintPicturePath;
+    }
+
+    public void setHintPicturePath(String hintPicturePath) {
+        this.hintPicturePath = hintPicturePath;
+    }
 
     public void setClueText(String clueText) {
         this.clueText = clueText;

@@ -155,5 +155,17 @@
     <string name="current_gps_accuracy">Akt. GPS-Genauigkeit:</string>
     <string name="node_gps_accuracy">Node GPS-Genauigkeit:</string>
 
+    <string name="paperchase_main_title">Schnitzeljagd</string>
+    <string name="paperchase_main_empty_list">Zurzeit keine Schnitzeljagden verfügbar!</string>
+    <string name="add_paperchase_name_of_paperchase">Name der Schnitzeljagd</string>
+    <string name="add_paperchase_description_of_paperchase">Beschreibung der Schnitzeljagd</string>
+    <string name="start_paperchase_description">Beschreibung:</string>
+    <string name="start_paperchase_starting_point">Startpunkt der Schnitzeljagd:</string>
+    <string name="start_paperchase_navigation">Navigation</string>
+    <string name="start_paperchase_begin">Beginne Schnitzeljagd</string>
+    <string name="start_paperchase_hint_text">Die Schnitzeljagd kann erst begonnen werden, wenn du dich am Startpunkt befindest</string>
+    <string name="play_paperchase_hint_text">Dies ist dein Hinweis:</string>
+    <string name="play_paperchase_hint_to_help">Bitte begeben Sie sich zum nächsten Ort</string>
+
 
 </resources>

@@ -1,23 +1,17 @@
 package de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase;
 
-import android.content.DialogInterface;
-import android.graphics.Color;
-import android.support.v7.app.AlertDialog;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.woxthebox.draglistview.DragItemAdapter;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 import de.htwberlin.f4.ai.ma.indoorroutefinder.R;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.models.Clue;
 
 /**
  * Created by Yannik on 21.11.2017.
