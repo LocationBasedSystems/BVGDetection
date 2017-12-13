@@ -1,7 +1,9 @@
 package de.htwberlin.f4.ai.ma.indoorroutefinder.gps.updaters;
 
 import android.location.Location;
+import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.htwberlin.f4.ai.ma.indoorroutefinder.edge.Edge;
@@ -30,16 +32,19 @@ public class GlobalCoordinateUpdaterImpl implements GlobalCoordinateUpdater {
 
     @Override
     public void updateGlobalCoordinates() {
+        Log.d("COORDUPD", "START OF COORD UPDATE");
         List<Node> nodes = databaseHandler.getAllNodes();
+
         while (!nodes.isEmpty()) {
             GlobalNode mostAccurate = null;
             for (Node n : nodes) {
                 GlobalNode temp = GlobalNodeFactory.createInstance(n);
                 if (temp.hasGlobalCoordinates() && ((mostAccurate == null) || (temp.getGlobalCalculationInaccuracyRating() < mostAccurate.getGlobalCalculationInaccuracyRating()))) {
                     mostAccurate = temp;
+                    Log.d("COORDUPD", "new mostAccurate: " + mostAccurate.getId() + "; coords: " + mostAccurate.getCoordinates());
                 }
             }
-            if (mostAccurate != null) {
+            if (mostAccurate != null && mostAccurate.getCoordinates() != null && !mostAccurate.getCoordinates().equals("")) {
                 List<Edge> edges = databaseHandler.getAllEdges();
                 Node mostAccurateNode = mostAccurate.getNode();
                 for (Edge e : edges) {
@@ -51,7 +56,11 @@ public class GlobalCoordinateUpdaterImpl implements GlobalCoordinateUpdater {
                     else if (areNodesEqual(e.getNodeB(), mostAccurateNode)) {
                         otherNode = GlobalNodeFactory.createInstance(e.getNodeA());
                     }
-                    if (otherNode != null && (!otherNode.hasGlobalCoordinates() || otherNode.getGlobalCalculationInaccuracyRating() > mostAccurate.getGlobalCalculationInaccuracyRating() + (e.getWeight() * INACCURACY_PER_METER))) {
+                    if (otherNode != null)
+                        Log.d("COORDUPD", "Other Node: " + otherNode.getId());
+                    if (otherNode != null && otherNode.getCoordinates() != null && !otherNode.getCoordinates().equals("") && (!otherNode.hasGlobalCoordinates() || otherNode.getGlobalCalculationInaccuracyRating() > mostAccurate.getGlobalCalculationInaccuracyRating() + (e.getWeight() * INACCURACY_PER_METER))) {
+                        Log.d("COORDUPD", "mostAccurate: " + mostAccurate.getId() + "; coords: " + mostAccurate.getCoordinates());
+                        Log.d("COORDUPD", "otherNode: " + otherNode.getId() + "; coords: " + otherNode.getCoordinates());
                         LocalGlobalCoordinateCalculator calculator = LocalGlobalCoordinateCalculatorFactory.getInstance();
                         Location source = mostAccurate.getLocation();
                         Location newLocation = calculator.getGlobalCoordinates(calculator.calculateOffset(mostAccurate.getCoordinates(), otherNode.getCoordinates()), source);
@@ -62,15 +71,29 @@ public class GlobalCoordinateUpdaterImpl implements GlobalCoordinateUpdater {
                                 otherNode.setAltitude(newLocation.getAltitude());
                             }
                             otherNode.setGlobalCalculationInaccuracyRating(mostAccurate.getGlobalCalculationInaccuracyRating() + (e.getWeight() * INACCURACY_PER_METER));
+                            databaseHandler.updateNode(otherNode.getNode(), otherNode.getId());
                         }
                     }
                 }
-                nodes.remove(mostAccurateNode);
+                for (Node n : nodes) {
+                    if (areNodesEqual(n, mostAccurateNode)) {
+                        nodes.remove(n);
+                        Log.d("COORDUPD", "Removed " + n.getId());
+                    }
+                }
+            }
+            else if (mostAccurate != null ) {
+                for (Node n : nodes) {
+                    if (areNodesEqual(n, mostAccurate.getNode())) {
+                        nodes.remove(n);
+                    }
+                }
             }
             else {
                 break;
             }
         }
+        Log.d("COORDUPD", "END OF COORD UPDATE");
     }
 
     private boolean areNodesEqual(Node a, Node b) {

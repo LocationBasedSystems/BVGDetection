@@ -26,6 +26,11 @@
             android:id="@+id/nav_paperchase"
             android:title="Schnitzeljagd" />
         <item
+            android:id="@+id/nav_gps_test"
+            android:icon="@drawable/gps_icon"
+            android:title="GPS Test Activity"
+            />
+        <item
             android:id="@+id/nav_import"
             android:icon="@drawable/import_export"
             android:title="Import / Export" />

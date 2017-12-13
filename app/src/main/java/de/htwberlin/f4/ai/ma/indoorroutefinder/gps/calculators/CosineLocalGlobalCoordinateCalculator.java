@@ -1,6 +1,7 @@
 package de.htwberlin.f4.ai.ma.indoorroutefinder.gps.calculators;
 
 import android.location.Location;
+import android.util.Log;
 
 import de.htwberlin.f4.ai.ma.indoorroutefinder.measurement.WKT;
 
@@ -42,6 +43,15 @@ public class CosineLocalGlobalCoordinateCalculator implements LocalGlobalCoordin
 
     @Override
     public String calculateOffset(String sourceLocalCoords, String targetLocalCoords) {
+        float[] source = WKT.strToCoord(sourceLocalCoords);
+        float[] target = WKT.strToCoord(targetLocalCoords);
+        float[] result = new float[3];
+        if (source != null && target != null && source.length == 3 && target.length == 3) {
+            for (int i = 0; i < 3; i++) {
+                result[i] = target[i] - source [i];
+            }
+            return WKT.coordToStr(result);
+        }
         return null;
     }
 

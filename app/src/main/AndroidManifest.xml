@@ -46,11 +46,10 @@
             android:name=".paperchase.StartPaperchaseActivity"
             android:parentActivityName=".paperchase.PaperchaseMainActivity"
             android:theme="@style/GreenActionBarTheme" />
-        <activity android:name=".paperchase.PlayPaperchaseActivity"
+        <activity
+            android:name=".paperchase.PlayPaperchaseActivity"
             android:parentActivityName=".paperchase.StartPaperchaseActivity"
-            android:theme="@style/GreenActionBarTheme">
-
-        </activity>
+            android:theme="@style/GreenActionBarTheme"></activity>
         <activity
             android:name=".NodeRecordEditActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -70,6 +69,7 @@
             !
         -->
 
+        <activity android:name=".gps.activities.GpsTestActivity"></activity>
     </application>
 
 </manifest>

@@ -11,7 +11,8 @@ public class LocalGlobalCoordinateCalculatorFactory {
 
     public static LocalGlobalCoordinateCalculator getInstance() {
         if (instance == null) {
-            instance = new SimpleHaversineLocalGlobalCoordinateCalculator();
+            // instance = new SimpleHaversineLocalGlobalCoordinateCalculator();
+            instance = new CosineLocalGlobalCoordinateCalculator();
         }
         return instance;
     }
