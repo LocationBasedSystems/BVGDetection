@@ -118,7 +118,7 @@ public class AddPaperchaseActivity extends AppCompatActivity  implements  Recycl
             }
         });
         dragListView.setLayoutManager(new LinearLayoutManager(this));
-        listAdapter = new ItemAdapter(paperchase.getClueList(), R.layout.clue_list_item, R.id.clue_list_item_name, true,this);
+        listAdapter = new ItemAdapter(paperchase.getClueList(), R.layout.clue_list_item, R.id.clue_list_item_root, true,this);
         dragListView.setAdapter(listAdapter,false);
         dragListView.setCanDragHorizontally(false);
     }
