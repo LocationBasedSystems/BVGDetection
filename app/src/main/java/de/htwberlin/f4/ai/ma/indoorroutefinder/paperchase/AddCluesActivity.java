@@ -28,6 +28,7 @@ import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +49,7 @@ public class AddCluesActivity extends AppCompatActivity {
     ArrayAdapter<Node> arrayAdapter;
     private MenuItem searchMenuItem;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,17 +69,14 @@ public class AddCluesActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                checkImage = (ImageView) view.findViewById(R.id.add_clues_item_checkimage);
+
                 if(!checkedNodesList.contains(nodeList.get(position))) {
-//                    if(checkImage != null) {
-//                        checkImage.setImageResource(R.drawable.ic_check_box_black_24dp);
-//                    }
+
                     checkedNodesList.add(nodeList.get(position));
 
                 }
                 else{
                     checkedNodesList.remove(nodeList.get(position));
-//                    checkImage.setImageResource(R.drawable.ic_check_box_outline_blank_black_24dp);
                 }
                 arrayAdapter.notifyDataSetChanged();
             }
@@ -94,7 +93,7 @@ public class AddCluesActivity extends AppCompatActivity {
                 nodeList.addAll(allNodesList);
                 ArrayList<Node> nodesToRemove = new ArrayList<>();
                 for(Node n :nodeList){
-                    if(!n.getId().startsWith(charSequence.toString())){
+                    if(!n.getId().toLowerCase().startsWith(charSequence.toString().toLowerCase())){
                         nodesToRemove.add(n);
                     }
                 }

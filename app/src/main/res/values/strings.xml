@@ -170,6 +170,7 @@
     <string name="paperchase_delete_string">Schnitzeljagd löschen</string>
     <string name="add_clues_search_nodes">Orte suchen</string>
     <string name="back_to_paperchase">Zurück zur Schnitzeljagd</string>
+    <string name="finished_back_button_text">Zurück zur Schnitzeljagdauswahl</string>
 
 
 </resources>
