@@ -14,6 +14,7 @@ import java.io.IOException;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.android.BaseActivity;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandler;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandlerFactory;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.paperchase.PaperchaseDatabaseHandlerFactory;
 
 /**
  * Created by Johann Winter
@@ -78,6 +79,7 @@ public class ImportExportActivity extends BaseActivity {
                             boolean importSuccessful = DatabaseHandlerFactory.getInstance(context).importDatabase();
                             if (importSuccessful) {
                                 Toast.makeText(context, getString(R.string.database_imported_toast), Toast.LENGTH_LONG).show();
+                                PaperchaseDatabaseHandlerFactory.getInstance(getApplicationContext()).deleteAll();
                             }
                         } catch (IOException e) {e.printStackTrace();}
                     }

@@ -87,4 +87,5 @@ public class Clue implements Comparable<Clue>, Serializable{
         }
         return idx + "  " + loc.getDescription().substring(0,30);
     }
+
 }

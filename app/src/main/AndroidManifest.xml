@@ -41,7 +41,8 @@
         <activity
             android:name=".paperchase.AddCluesActivity"
             android:parentActivityName=".paperchase.AddPaperchaseActivity"
-            android:theme="@style/GreenActionBarTheme" />
+            android:theme="@style/GreenActionBarTheme" >
+        </activity>
         <activity
             android:name=".paperchase.StartPaperchaseActivity"
             android:parentActivityName=".paperchase.PaperchaseMainActivity"

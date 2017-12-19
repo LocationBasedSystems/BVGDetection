@@ -1,5 +1,6 @@
 package de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +46,7 @@ public class AddCluesActivity extends AppCompatActivity {
     ArrayList<Node> checkedNodesList;
     DatabaseHandler databaseHandler;
     ArrayAdapter<Node> arrayAdapter;
+    private MenuItem searchMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,18 +67,19 @@ public class AddCluesActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                checkImage = (ImageView) view.findViewById(R.id.add_clues_item_checkimage);
+//                checkImage = (ImageView) view.findViewById(R.id.add_clues_item_checkimage);
                 if(!checkedNodesList.contains(nodeList.get(position))) {
-                    if(checkImage != null) {
-                        checkImage.setImageResource(R.drawable.ic_check_box_black_24dp);
-                    }
+//                    if(checkImage != null) {
+//                        checkImage.setImageResource(R.drawable.ic_check_box_black_24dp);
+//                    }
                     checkedNodesList.add(nodeList.get(position));
 
                 }
                 else{
                     checkedNodesList.remove(nodeList.get(position));
-                    checkImage.setImageResource(R.drawable.ic_check_box_outline_blank_black_24dp);
+//                    checkImage.setImageResource(R.drawable.ic_check_box_outline_blank_black_24dp);
                 }
+                arrayAdapter.notifyDataSetChanged();
             }
         });
         search.addTextChangedListener(new TextWatcher() {
@@ -95,7 +99,6 @@ public class AddCluesActivity extends AppCompatActivity {
                     }
                 }
                 nodeList.removeAll(nodesToRemove);
-                checkedNodesList.removeAll(nodesToRemove); //TODO checked wont work
                 arrayAdapter.notifyDataSetChanged();
             }
 
@@ -109,10 +112,12 @@ public class AddCluesActivity extends AppCompatActivity {
 
     private class ClueAdapter extends ArrayAdapter<Node>{
         private int layoutResource;
+        ArrayList<Node> list;
 
         public ClueAdapter(@NonNull Context context, int resource, @NonNull List<Node> objects) {
             super(context, resource, objects);
             layoutResource = resource;
+            list = (ArrayList<Node>) objects;
         }
 
         @NonNull
@@ -129,11 +134,18 @@ public class AddCluesActivity extends AppCompatActivity {
             if(clue != null){
                 TextView clueName = (TextView) view.findViewById(R.id.add_clues_item_name);
                 TextView clueDescr = (TextView) view.findViewById(R.id.add_clues_item_description);
+                ImageView clueCheckImage = (ImageView) view.findViewById(R.id.add_clues_item_checkimage);
                 if(clueName != null){
                     clueName.setText(clue.getId());
                 }
                 if(clueDescr != null){
                     clueDescr.setText(clue.getDescription());
+                }
+                if(checkedNodesList.contains(list.get(position))){
+                    clueCheckImage.setImageResource(R.drawable.ic_check_box_black_24dp);
+                }
+                else{
+                    clueCheckImage.setImageResource(R.drawable.ic_check_box_outline_blank_black_24dp);
                 }
             }
             return view;
@@ -144,6 +156,14 @@ public class AddCluesActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_add_clues, menu);
+//        inflater.inflate(R.menu.search_menu, menu);
+//
+//        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+//        searchMenuItem = menu.findItem(R.id.search);
+//        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+//        searchView.setSubmitButtonEnabled(true);
+//        //searchView.setOnQueryTextListener(this);
         return true;
     }
 

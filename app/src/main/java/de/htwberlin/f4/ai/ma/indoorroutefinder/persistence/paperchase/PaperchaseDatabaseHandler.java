@@ -25,6 +25,8 @@ public interface PaperchaseDatabaseHandler {
 
     void updatePaperchase(Paperchase paperchase,String oldPaperchaseName);
 
+    void deleteAll();
+
 
 
 

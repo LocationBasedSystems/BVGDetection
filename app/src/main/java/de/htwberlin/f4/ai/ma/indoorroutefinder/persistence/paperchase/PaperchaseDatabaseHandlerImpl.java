@@ -69,6 +69,12 @@ public class PaperchaseDatabaseHandlerImpl extends SQLiteOpenHelper implements P
         onCreate(db);
     }
 
+    public void deleteAll(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + CLUES_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + PAPERCHASES_TABLE);
+        onCreate(db);
+    }
 
     @Override
     public void insertPaperchase(Paperchase paperchase) {
