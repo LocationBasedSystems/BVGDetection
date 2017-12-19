@@ -1,5 +1,6 @@
 package de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.paperchase;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -26,6 +27,10 @@ public interface PaperchaseDatabaseHandler {
     void updatePaperchase(Paperchase paperchase,String oldPaperchaseName);
 
     void deleteAll();
+
+    boolean importDatabase() throws IOException;
+
+    boolean exportDatabase();
 
 
 
