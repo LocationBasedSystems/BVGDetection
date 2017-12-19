@@ -54,9 +54,6 @@ public class AddPaperchaseActivity extends AppCompatActivity  implements  Recycl
     private Timestamp timestamp;
 
 
-    ArrayList<Node> nodeList;
-    DatabaseHandler databaseHandler;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,14 +61,15 @@ public class AddPaperchaseActivity extends AppCompatActivity  implements  Recycl
 
         setTitle("Schnitzeljagd hinzufügen");
 
-        databaseHandler = DatabaseHandlerFactory.getInstance(this);
-        nodeList = new ArrayList<>();
-        nodeList.addAll(databaseHandler.getAllNodes());
-
         paperchaseName = (TextInputEditText) findViewById(R.id.add_paperchase_name);
         paperchaseDescription = (TextInputEditText) findViewById(R.id.add_paperchase_description);
-        paperchase = new Paperchase("empty");
         fab = (FloatingActionButton)findViewById(R.id.fab_add_clue);
+        try{
+            paperchase = (Paperchase) getIntent().getSerializableExtra("paperchase");
+            paperchaseName.setText(paperchase.getName());
+            paperchaseDescription.setText(paperchase.getDescription());
+        }catch (Exception e){paperchase = new Paperchase("empty");}
+
         refreshLayout = (MySwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         refreshLayout.setEnabled(false);
         dragListView = (DragListView) findViewById(R.id.add_paperchase_draglist);
@@ -121,6 +119,8 @@ public class AddPaperchaseActivity extends AppCompatActivity  implements  Recycl
         listAdapter = new ItemAdapter(paperchase.getClueList(), R.layout.clue_list_item, R.id.clue_list_item_root, true,this);
         dragListView.setAdapter(listAdapter,false);
         dragListView.setCanDragHorizontally(false);
+
+
     }
 
 
@@ -135,7 +135,7 @@ public class AddPaperchaseActivity extends AppCompatActivity  implements  Recycl
         }
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
-        if(position == nodeList.size() -1){
+        if(position == paperchase.getClueList().size() -1){
             builder.setTitle("Nachricht für das Erreichen des Ziels");
         }
         else {
@@ -283,16 +283,5 @@ public class AddPaperchaseActivity extends AppCompatActivity  implements  Recycl
             }
         }
     }
-
-
-//    public void generateDummyClues(){
-//        int size = 10;
-//        if(nodeList.size()< size){
-//            size = nodeList.size();
-//        }
-//        for(int i = 0; i < size ; i++){
-//            paperchase.addClue(new Clue("Ein Hinweis (" + i + ")", nodeList.get(i)));
-//        }
-//    }
 
 }

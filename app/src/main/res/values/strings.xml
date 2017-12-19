@@ -166,6 +166,8 @@
     <string name="start_paperchase_hint_text">Die Schnitzeljagd kann erst begonnen werden, wenn du dich am Startpunkt befindest</string>
     <string name="play_paperchase_hint_text">Dies ist dein Hinweis:</string>
     <string name="play_paperchase_hint_to_help">Bitte begeben Sie sich zum nächsten Ort</string>
+    <string name="paperchase_change_string">Schnitzeljagd bearbeiten</string>
+    <string name="paperchase_delete_string">Schnitzeljagd löschen</string>
 
 
 </resources>

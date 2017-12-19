@@ -89,15 +89,12 @@ public class PaperchaseDatabaseHandlerImpl extends SQLiteOpenHelper implements P
 
     @Override
     public Paperchase getPaperchase(String paperchaseName) {
-        ArrayList<Paperchase> paperchaseList = new ArrayList<>();
-        ArrayList<Clue> clueList = new ArrayList<>();
-        clueList = getAllCluesOfPaperchase(paperchaseName);
         String selectQuery = "SELECT * FROM " + PAPERCHASES_TABLE + " WHERE " + PAPERCHASE_NAME + " ='" + paperchaseName + "'";
         SQLiteDatabase database = this.getReadableDatabase();
         Cursor cursor = database.rawQuery(selectQuery, null);
         Paperchase paperchase = null;
         if(cursor.moveToFirst()){
-            paperchase = new Paperchase(cursor.getString(0), cursor.getString(1), clueList);
+            paperchase = new Paperchase(cursor.getString(0), cursor.getString(1), getAllCluesOfPaperchase(paperchaseName));
         }
         return paperchase;
     }
@@ -105,7 +102,6 @@ public class PaperchaseDatabaseHandlerImpl extends SQLiteOpenHelper implements P
     @Override
     public ArrayList<Paperchase> getAllPaperchases() {
         ArrayList<Paperchase> paperchaseList = new ArrayList<>();
-        ArrayList<Clue> clueList = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + PAPERCHASES_TABLE;
         SQLiteDatabase database = this.getReadableDatabase();
         Cursor cursor = database.rawQuery(selectQuery, null);
@@ -133,10 +129,33 @@ public class PaperchaseDatabaseHandlerImpl extends SQLiteOpenHelper implements P
                 PAPERCHASE_DESCRIPTION + " ='" + paperchase.getDescription() + "'";
         Log.d("DB: delete_Paperchase:", paperchase.getName());
         database.execSQL(deleteQuery);
+        deleteCluesByPaperchase(paperchase.getName());
     }
 
     @Override
-    public void insertClue(Clue clue, String paperchaseName) {
+    public void updatePaperchase(Paperchase paperchase, String oldPaperchaseName) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        if(checkIfPaperchaseExists(paperchase.getName())){
+
+
+            ContentValues values = new ContentValues();
+
+            values.put(PAPERCHASE_NAME, paperchase.getName());
+            values.put(PAPERCHASE_DESCRIPTION, paperchase.getDescription());
+            database.update(PAPERCHASES_TABLE, values, PAPERCHASE_NAME + "='" + oldPaperchaseName + "'", null);
+
+            deleteCluesByPaperchase(paperchase.getName());
+            for(Clue clue : paperchase.getClueList()){
+                insertClue(clue, paperchase.getName());
+            }
+        }
+        else{
+            insertPaperchase(paperchase);
+        }
+    }
+
+
+    private void insertClue(Clue clue, String paperchaseName) {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -153,8 +172,7 @@ public class PaperchaseDatabaseHandlerImpl extends SQLiteOpenHelper implements P
         database.close();
     }
 
-    @Override
-    public Clue getClue(int clueId) {
+    private Clue getClue(int clueId) {
         SQLiteDatabase database = this.getReadableDatabase();
         DatabaseHandler databaseHandler = DatabaseHandlerFactory.getInstance(context);
         String selectQuery = "SELECT * FROM " + CLUES_TABLE + " WHERE " + CLUE_ID + "='" + clueId + "'";
@@ -166,8 +184,7 @@ public class PaperchaseDatabaseHandlerImpl extends SQLiteOpenHelper implements P
         return clue;
     }
 
-    @Override
-    public ArrayList<Clue> getAllCluesOfPaperchase(String paperchaseName) {
+    private ArrayList<Clue> getAllCluesOfPaperchase(String paperchaseName) {
         SQLiteDatabase database = this.getReadableDatabase();
         DatabaseHandler databaseHandler = DatabaseHandlerFactory.getInstance(context);
         String selectQuery = "SELECT * FROM " + CLUES_TABLE + " WHERE " + CLUE_PAPERCHASE + "='" + paperchaseName + "'";
@@ -184,16 +201,17 @@ public class PaperchaseDatabaseHandlerImpl extends SQLiteOpenHelper implements P
         return clueList;
     }
 
-    @Override
-    public boolean checkIfClueExists(int clueId) {
+    private void updateClue(int ClueId){
+
+    }
+    private boolean checkIfClueExists(int clueId) {
         if(getClue(clueId) != null){
             return true;
         }
         else{ return false; }
     }
 
-    @Override
-    public void deleteCluesByPaperchase(String paperchaseName) {
+    private void deleteCluesByPaperchase(String paperchaseName) {
         SQLiteDatabase database = this.getWritableDatabase();
         String deleteQuery = "DELETE FROM " + CLUES_TABLE + " WHERE " + CLUE_PAPERCHASE + "='" + paperchaseName + "'";
         Log.d("DB: delete_Clues:", paperchaseName);

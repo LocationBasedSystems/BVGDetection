@@ -23,17 +23,9 @@ public interface PaperchaseDatabaseHandler {
 
     void deletePaperchase(Paperchase paperchase);
 
-    //--------Clue management-------
+    void updatePaperchase(Paperchase paperchase,String oldPaperchaseName);
 
-    void insertClue(Clue clue, String paperchaseName);
 
-    Clue getClue(int clueId);
-
-    ArrayList<Clue> getAllCluesOfPaperchase(String paperchaseName);
-
-    boolean checkIfClueExists(int clueId);
-
-    void deleteCluesByPaperchase(String paperchaseName);
 
 
 }
