@@ -102,7 +102,7 @@ public class GlobalNodeImpl implements GlobalNode {
             try {
                 this.setAdditionalInfoFromObject(gson.fromJson(additionalInfo, AdditionalInfo.class));
             } catch (JsonSyntaxException e) {
-                Log.d(LOG_PREFIX, "Unable to parse additional info! Assuming none is set.", e);
+                Log.d(LOG_PREFIX, "Unable to parse additional info for '" + this.id + "'! Assuming none is set. String=" + additionalInfo, e);
                 this.setAdditionalInfoFromObject(null);
             }
         }
