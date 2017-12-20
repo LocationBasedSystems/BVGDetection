@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,7 +22,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locators.Locator;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.wifi_scanner.WifiScanner;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.wifi_scanner.WifiScannerFactory;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.android.BaseActivity;

@@ -13,7 +13,8 @@ import android.widget.Toast;
 
 import de.htwberlin.f4.ai.ma.indoorroutefinder.R;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.RouteFinderActivity;
-import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locators.listeners.LocationChangeListener;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.LocationSource;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.listeners.LocationChangeListener;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.node.Node;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.models.Paperchase;
 
@@ -111,7 +112,7 @@ public class StartPaperchaseActivity extends AppCompatActivity implements Locati
     }
 
     @Override
-    public void onLocationChanged(Node newLocation) {
+    public void onLocationChanged(Node newLocation, LocationSource source) {
         if(newLocation.equals(paperchase.getClueList().get(0))){
             beginButton.setVisibility(View.VISIBLE);
         }
