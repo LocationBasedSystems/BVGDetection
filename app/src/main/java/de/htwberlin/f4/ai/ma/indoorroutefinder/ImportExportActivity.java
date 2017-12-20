@@ -14,6 +14,8 @@ import java.io.IOException;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.android.BaseActivity;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandler;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandlerFactory;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.paperchase.PaperchaseDatabaseHandler;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.paperchase.PaperchaseDatabaseHandlerFactory;
 
 /**
  * Created by Johann Winter
@@ -77,7 +79,14 @@ public class ImportExportActivity extends BaseActivity {
                         try {
                             boolean importSuccessful = DatabaseHandlerFactory.getInstance(context).importDatabase();
                             if (importSuccessful) {
-                                Toast.makeText(context, getString(R.string.database_imported_toast), Toast.LENGTH_LONG).show();
+                                boolean paperchaseImportSuccessful = PaperchaseDatabaseHandlerFactory.getInstance(context).importDatabase();
+                                if(paperchaseImportSuccessful){
+                                    Toast.makeText(context, "Datenbanken importiert", Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Toast.makeText(context, getString(R.string.database_imported_toast), Toast.LENGTH_LONG).show();
+                                }
+
                             }
                         } catch (IOException e) {e.printStackTrace();}
                     }
@@ -107,7 +116,13 @@ public class ImportExportActivity extends BaseActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             boolean exportSuccessful = databaseHandler.exportDatabase();
                             if (exportSuccessful) {
-                                Toast.makeText(context, getString(R.string.database_exported_toast), Toast.LENGTH_LONG).show();
+                                boolean paperchaseExportSuccessful = PaperchaseDatabaseHandlerFactory.getInstance(context).exportDatabase();
+                                if(paperchaseExportSuccessful){
+                                    Toast.makeText(context, "Datenbanken exportiert", Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Toast.makeText(context, getString(R.string.database_exported_toast), Toast.LENGTH_LONG).show();
+                                }
                             }
                         }
                     })

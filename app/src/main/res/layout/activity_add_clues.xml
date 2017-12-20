@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:maxLines="1"
-            android:hint="Nicht funktionierende Suchleiste" />
+            android:hint="@string/add_clues_search_nodes" />
     </android.support.design.widget.TextInputLayout>
 
     <ListView

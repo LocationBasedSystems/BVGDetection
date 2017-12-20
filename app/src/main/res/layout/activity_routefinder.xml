@@ -121,6 +121,17 @@
             android:id="@+id/navigation_result_listview"
             android:layout_below="@+id/separator_view"/>
 
+        <Button
+            android:id="@+id/backToPaperchaseButton"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:visibility="invisible"
+            android:layout_above="@+id/total_distance_textview"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:text="@string/back_to_paperchase" />
+
 
     </RelativeLayout>
 

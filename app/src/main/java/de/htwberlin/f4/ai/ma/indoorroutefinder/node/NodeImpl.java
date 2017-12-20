@@ -73,4 +73,9 @@ class NodeImpl implements Node {
     public String toString() { //TODO to delete
         return this.getId();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return ((Node)obj).getId().equals(this.getId());
+    }
 }

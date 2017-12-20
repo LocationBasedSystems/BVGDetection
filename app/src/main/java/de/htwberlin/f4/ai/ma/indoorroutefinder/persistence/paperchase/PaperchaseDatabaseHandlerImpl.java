@@ -5,14 +5,20 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 import android.util.Log;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.models.Clue;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.models.Paperchase;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandler;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandlerFactory;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.FileUtilities;
 
 /**
  * Created by Yannik on 05.12.2017.
@@ -69,6 +75,12 @@ public class PaperchaseDatabaseHandlerImpl extends SQLiteOpenHelper implements P
         onCreate(db);
     }
 
+    public void deleteAll(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + CLUES_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + PAPERCHASES_TABLE);
+        onCreate(db);
+    }
 
     @Override
     public void insertPaperchase(Paperchase paperchase) {
@@ -218,5 +230,61 @@ public class PaperchaseDatabaseHandlerImpl extends SQLiteOpenHelper implements P
 
         database.execSQL(deleteQuery);
         database.close();
+    }
+
+    //IMPORT AND EXPORT
+
+    /**
+     * Copies the database file at "/IndoorPositioning/Exported/paperchase_data.db" over the current
+     * internal application database (existing data will be overwritten!).
+     *
+     * @return return-code: true means successful, false unsuccessful
+     */
+    public boolean importDatabase() throws IOException{
+        String DB_FILEPATH = context.getApplicationInfo().dataDir + "/databases/paperchase_data.db";
+
+        // Close the SQLiteOpenHelper so it will commit the created empty database to internal storage
+        close();
+
+        File oldDb = new File(DB_FILEPATH);
+        File newDb = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/IndoorPositioning/Exported/paperchase_data.db");
+
+        if (newDb.exists()) {
+            System.out.println("+++ new db exists");
+            FileUtilities.copyFile(new FileInputStream(newDb), new FileOutputStream(oldDb));
+            // Access the copied database so SQLiteHelper will cache it and mark it as created
+            getWritableDatabase().close();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Export the database to SDCARD location "/IndoorPositioning/Exported/paperchase_data.db".
+     * @return boolean, if action was successful
+     */
+    public boolean exportDatabase() {
+        try {
+
+            File exportFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/IndoorPositioning/Exported");
+            if (!exportFolder.exists()) {
+                exportFolder.mkdirs();
+            }
+
+            if (exportFolder.canWrite()) {
+                String currentDBPath = context.getDatabasePath("paperchase_data.db").getPath();
+
+                String exportFilename = "paperchase_data.db";
+                File currentDB = new File(currentDBPath);
+                File backupDB = new File(exportFolder, exportFilename);
+
+                if (currentDB.exists()) {
+                    FileUtilities.copyFile(new FileInputStream(currentDB), new FileOutputStream(backupDB));
+                    return true;
+                }
+
+            }
+        } catch(Exception e) {e.printStackTrace();}
+        return false;
     }
 }

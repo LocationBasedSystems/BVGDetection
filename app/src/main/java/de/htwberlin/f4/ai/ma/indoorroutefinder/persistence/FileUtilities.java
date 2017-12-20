@@ -23,7 +23,7 @@ public class FileUtilities {
      * @param fromFile FileInputStream for the file to copy from.
      * @param toFile FileInputStream for the file to copy to.
      */
-    static void copyFile(FileInputStream fromFile, FileOutputStream toFile) throws IOException {
+    public static void copyFile(FileInputStream fromFile, FileOutputStream toFile) throws IOException {
         FileChannel fromChannel = null;
         FileChannel toChannel = null;
         try {

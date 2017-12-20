@@ -59,8 +59,8 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="150dp"
+            android:layout_width="80dp"
+            android:layout_height="130dp"
             android:layout_marginStart="20dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -105,17 +105,16 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="65dp"
+        android:layout_marginBottom="80dp"
         android:text="@string/start_paperchase_begin"
         android:textSize="20dp" />
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="50dp"
         android:layout_marginBottom="20dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        android:textSize="8dp"
         android:paddingTop="10dp"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
