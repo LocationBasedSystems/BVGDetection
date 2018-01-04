@@ -5,6 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.text.InputType;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,11 +32,15 @@ public class PaperchaseMainActivity extends BaseActivity {
     private FloatingActionButton fab;
     private TextView emptyList;
     private PaperchaseDatabaseHandler databaseHandler;
+    private static final int REQUEST_START = 2;
+    private static final int REQUEST_ADD = 1;
+    private static final int REQUEST_CHANGE = 3;
+    private int latestEditID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle("Schnitzeljagd");
+        setTitle("Schnitzeljagden");
 
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
         getLayoutInflater().inflate(R.layout.activity_paperchase_main, contentFrameLayout);
@@ -52,31 +59,51 @@ public class PaperchaseMainActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getApplicationContext(), StartPaperchaseActivity.class);
                 intent.putExtra("paperchase", paperchaseList.get(i));
-                startActivityForResult(intent, 2);
+                startActivityForResult(intent, REQUEST_START);
             }
         });
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int position, long l) {
-                new AlertDialog.Builder(view.getContext())
-                        .setTitle(getString(R.string.delete_entry_title_question))
-                        .setMessage("Soll die Schnitzeljagd \"" + paperchaseList.get(position).getName() + "\" wirklich gelöscht werden?")
-                        .setCancelable(false)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                databaseHandler.deletePaperchase(paperchaseList.get(position));
-                                loadDbData();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-                return true;
-            }
-        });
+
+        registerForContextMenu(listView);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        if(v.getId() == R.id.paperchase_list){
+            getMenuInflater().inflate(R.menu.paperchase_list_longclick_menu, menu);
+        }
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        if(item.getItemId() == R.id.paperchase_delete){
+            new AlertDialog.Builder(getApplicationContext())
+                    .setTitle(getString(R.string.delete_entry_title_question))
+                    .setMessage("Soll die Schnitzeljagd \"" + paperchaseList.get(info.position).getName() + "\" wirklich gelöscht werden?")
+                    .setCancelable(false)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            databaseHandler.deletePaperchase(paperchaseList.get(info.position));
+                            loadDbData();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            return true;
+        }
+        else if(item.getItemId() == R.id.paperchase_change){
+            Intent intent = new Intent(this, AddPaperchaseActivity.class);
+            intent.putExtra("paperchase", paperchaseList.get(info.position));
+            latestEditID = info.position;
+            startActivityForResult(intent, REQUEST_CHANGE);
+        }
+
+        return super.onContextItemSelected(item);
     }
 
     private void loadDbData() {
@@ -88,23 +115,34 @@ public class PaperchaseMainActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == 1) {
-            if(resultCode == RESULT_OK){
-                Paperchase paperchaseTemp = (Paperchase)data.getSerializableExtra("paperchase");
-                databaseHandler.insertPaperchase(paperchaseTemp);
-                loadDbData();
-            }
-            else if(requestCode == RESULT_CANCELED){
-                Toast.makeText(getApplicationContext(), "Schnitzeljagderstellung abgebrochen", Toast.LENGTH_SHORT).show();
-            }
-        }
-        else if(requestCode == 2){
-            if(resultCode == RESULT_OK){
-                Toast.makeText(this, "WAHNSINN!!! DIE SCHNITZELJAGD WURDE ERFOLGREICH GESCHAFFT!", Toast.LENGTH_SHORT).show();
-            }
-            else if(resultCode == RESULT_CANCELED){
-                Toast.makeText(this, "Schade, Schnitzeljagd abgebrochen", Toast.LENGTH_SHORT).show();;
-            }
+        switch (requestCode){
+            case REQUEST_ADD:
+                if(resultCode == RESULT_OK){
+                    Paperchase paperchaseTemp = (Paperchase)data.getSerializableExtra("paperchase");
+                    databaseHandler.insertPaperchase(paperchaseTemp);
+                    loadDbData();
+                }
+                else if(requestCode == RESULT_CANCELED){
+                    Toast.makeText(getApplicationContext(), "Schnitzeljagderstellung abgebrochen", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case REQUEST_START:
+                if(resultCode == RESULT_OK){
+                    Toast.makeText(this, "WAHNSINN!!! DIE SCHNITZELJAGD WURDE ERFOLGREICH GESCHAFFT!", Toast.LENGTH_SHORT).show();
+                }
+                else if(resultCode == RESULT_CANCELED){
+                    Toast.makeText(this, "Schade, Schnitzeljagd abgebrochen", Toast.LENGTH_SHORT).show();;
+                }
+                break;
+            case REQUEST_CHANGE:
+                if(resultCode == RESULT_OK){
+                    databaseHandler.updatePaperchase((Paperchase) data.getSerializableExtra("paperchase"), paperchaseList.get(latestEditID).getName());
+                    loadDbData();
+                }
+                else if(resultCode == RESULT_CANCELED){
+                    Toast.makeText(this, "Bearbeiten abgebrochen", Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
     }
 

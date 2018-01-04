@@ -5,10 +5,11 @@ import android.location.Location;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.measurement.WKT;
 
 /**
+ * IMPORTANT NOTE: This class is not functional and was abandoned and replaced by the {@link CosineLocalGlobalCoordinateCalculator}. It may be implemented correctly at a later time.
  * @author Emil Schoenawa (eschoenawa; Matr. Nr.: 554086)
  * @version 05.12.2017
  */
-
+@Deprecated
 public class SimpleHaversineLocalGlobalCoordinateCalculator implements LocalGlobalCoordinateCalculator {
 
     // earth circumference in km
@@ -19,6 +20,7 @@ public class SimpleHaversineLocalGlobalCoordinateCalculator implements LocalGlob
 
     @Override
     public Location getGlobalCoordinates(String offsetInLocalCoords, Location source) {
+        //TODO This method is not tested and will most likely not work correctly
         float[] offset = WKT.strToCoord(offsetInLocalCoords);
         if (offset != null && offset.length == 3) {
             Location result = new Location(source);
@@ -61,6 +63,7 @@ public class SimpleHaversineLocalGlobalCoordinateCalculator implements LocalGlob
     }
 
     private double correctLatitude(double uncorrectedLatitude) {
+        //TODO This method is not tested and will may not work correctly
         if (uncorrectedLatitude < -90) {
             return uncorrectedLatitude > -180 ? -90 - (uncorrectedLatitude + 90) : correctLatitude(uncorrectedLatitude + 180);
         }
@@ -73,6 +76,7 @@ public class SimpleHaversineLocalGlobalCoordinateCalculator implements LocalGlob
     }
 
     private double correctLongitude(double uncorrectedLongitude) {
+        //TODO This method is not tested and will may not work correctly
         if (uncorrectedLongitude < -180) {
             return uncorrectedLongitude > -360 ? 180 - (uncorrectedLongitude + 180) : correctLongitude(uncorrectedLongitude + 360);
         }

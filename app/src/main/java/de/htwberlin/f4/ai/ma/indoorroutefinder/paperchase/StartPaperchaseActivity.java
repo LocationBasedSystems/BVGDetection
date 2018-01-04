@@ -12,9 +12,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import de.htwberlin.f4.ai.ma.indoorroutefinder.R;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.RouteFinderActivity;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.LocationSource;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.listeners.LocationChangeListener;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.node.Node;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.models.Paperchase;
 
-public class StartPaperchaseActivity extends AppCompatActivity {
+public class StartPaperchaseActivity extends AppCompatActivity implements LocationChangeListener{
 
     TextView paperchaseName;
     TextView paperchaseDescription;
@@ -24,6 +28,7 @@ public class StartPaperchaseActivity extends AppCompatActivity {
     Button navigateButton;
     Button beginButton;
     Paperchase paperchase;
+    private final static int REQUEST_NAV = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +69,11 @@ public class StartPaperchaseActivity extends AppCompatActivity {
             navigateButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(StartPaperchaseActivity.this, "Not yet implemented", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(), RouteFinderActivity.class);
+                    intent.putExtra("paperchase", true);
+                    intent.putExtra("nodeId", paperchase.getClueList().get(0).getLoc().getId());
+                    startActivityForResult(intent, REQUEST_NAV);
+                    //Toast.makeText(StartPaperchaseActivity.this, "Not yet implemented", Toast.LENGTH_SHORT).show();
                     //TODO routefinder with custom nodes selected
                 }
             });
@@ -91,11 +100,24 @@ public class StartPaperchaseActivity extends AppCompatActivity {
                 finish();
             }
         }
+        else if(requestCode == REQUEST_NAV){
+            Toast.makeText(this, "welcome back", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void onBackPressed() {
         setResult(RESULT_CANCELED);
         finish();
+    }
+
+    @Override
+    public void onLocationChanged(Node newLocation, LocationSource source) {
+        if(newLocation.equals(paperchase.getClueList().get(0))){
+            beginButton.setVisibility(View.VISIBLE);
+        }
+        else{
+
+        }
     }
 }

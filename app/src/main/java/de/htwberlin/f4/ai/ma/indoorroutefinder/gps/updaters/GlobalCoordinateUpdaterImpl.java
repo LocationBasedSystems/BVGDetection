@@ -56,8 +56,16 @@ public class GlobalCoordinateUpdaterImpl implements GlobalCoordinateUpdater {
                     else if (areNodesEqual(e.getNodeB(), mostAccurateNode)) {
                         otherNode = GlobalNodeFactory.createInstance(e.getNodeA());
                     }
-                    if (otherNode != null)
+                    if (otherNode != null) {
                         Log.d("COORDUPD", "Other Node: " + otherNode.getId());
+
+                        Log.d("COORDUPD", "otherNode != null: " + String.valueOf(otherNode != null));
+                        Log.d("COORDUPD", "otherNode.getCoordinates() != null: " + String.valueOf(otherNode.getCoordinates() != null));
+                        Log.d("COORDUPD", "!otherNode.getCoordinates().equals(\"\"): " + String.valueOf(!otherNode.getCoordinates().equals("")));
+                        Log.d("COORDUPD", "!otherNode.hasGlobalCoordinates(): " + String.valueOf(!otherNode.hasGlobalCoordinates()));
+                        Log.d("COORDUPD", "the Inaccuracy thing: " + String.valueOf(otherNode.getGlobalCalculationInaccuracyRating() > mostAccurate.getGlobalCalculationInaccuracyRating() + (e.getWeight() * INACCURACY_PER_METER)));
+                    }
+
                     if (otherNode != null && otherNode.getCoordinates() != null && !otherNode.getCoordinates().equals("") && (!otherNode.hasGlobalCoordinates() || otherNode.getGlobalCalculationInaccuracyRating() > mostAccurate.getGlobalCalculationInaccuracyRating() + (e.getWeight() * INACCURACY_PER_METER))) {
                         Log.d("COORDUPD", "mostAccurate: " + mostAccurate.getId() + "; coords: " + mostAccurate.getCoordinates());
                         Log.d("COORDUPD", "otherNode: " + otherNode.getId() + "; coords: " + otherNode.getCoordinates());
@@ -72,6 +80,14 @@ public class GlobalCoordinateUpdaterImpl implements GlobalCoordinateUpdater {
                             }
                             otherNode.setGlobalCalculationInaccuracyRating(mostAccurate.getGlobalCalculationInaccuracyRating() + (e.getWeight() * INACCURACY_PER_METER));
                             databaseHandler.updateNode(otherNode.getNode(), otherNode.getId());
+                            for (Node n : nodes) {
+                                if (areNodesEqual(otherNode.getNode(), n)) {
+                                    nodes.remove(n);
+                                    nodes.add(otherNode.getNode());
+                                    Log.d("COORDUPD", "Updated " + n.getId());
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
@@ -79,6 +95,7 @@ public class GlobalCoordinateUpdaterImpl implements GlobalCoordinateUpdater {
                     if (areNodesEqual(n, mostAccurateNode)) {
                         nodes.remove(n);
                         Log.d("COORDUPD", "Removed " + n.getId());
+                        break;
                     }
                 }
             }

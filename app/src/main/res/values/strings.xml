@@ -163,9 +163,14 @@
     <string name="start_paperchase_starting_point">Startpunkt der Schnitzeljagd:</string>
     <string name="start_paperchase_navigation">Navigation</string>
     <string name="start_paperchase_begin">Beginne Schnitzeljagd</string>
-    <string name="start_paperchase_hint_text">Die Schnitzeljagd kann erst begonnen werden, wenn du dich am Startpunkt befindest</string>
+    <string name="start_paperchase_hint_text">Die Schnitzeljagd kann erst begonnen werden, wenn man sich am Startpunkt befindet</string>
     <string name="play_paperchase_hint_text">Dies ist dein Hinweis:</string>
     <string name="play_paperchase_hint_to_help">Bitte begeben Sie sich zum nächsten Ort</string>
+    <string name="paperchase_change_string">Schnitzeljagd bearbeiten</string>
+    <string name="paperchase_delete_string">Schnitzeljagd löschen</string>
+    <string name="add_clues_search_nodes">Orte suchen</string>
+    <string name="back_to_paperchase">Zurück zur Schnitzeljagd</string>
+    <string name="finished_back_button_text">Zurück zur Schnitzeljagdauswahl</string>
 
 
 </resources>

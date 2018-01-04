@@ -32,13 +32,14 @@ public class PlayPaperchaseActivity extends AppCompatActivity {
     TextView currentNodeText;
     Button nextButton;
     ImageView hintImage;
-    private boolean showingBigPictureAtTheMoment = false;
+    private long millisAtStart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_paperchase);
 
+        millisAtStart = System.currentTimeMillis();
         paperchase = (Paperchase) getIntent().getSerializableExtra("paperchase");
         setTitle(paperchase.getName());
         hintText = (TextView) findViewById(R.id.play_paperchase_hint);
@@ -49,13 +50,22 @@ public class PlayPaperchaseActivity extends AppCompatActivity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(currentClueId +1 < paperchase.getClueList().size()){
+                if(currentClueId +2 < paperchase.getClueList().size()){
                     currentClueId++;
                     setFields();
-                    Toast.makeText(PlayPaperchaseActivity.this, "Toll, einen weiteren Ort gefunden", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(PlayPaperchaseActivity.this, "Toll, einen weiteren Ort gefunden", Toast.LENGTH_SHORT).show();
+                }
+                else if(currentClueId +2 == paperchase.getClueList().size()){
+                    long millis = System.currentTimeMillis() - millisAtStart;
+                    Intent intent = new Intent(getApplicationContext(), FinishedPaperchaseActivity.class);
+                    intent.putExtra("time", millis);
+                    intent.putExtra("text", paperchase.getClueList().get(currentClueId+1).getClueText());
+                    startActivity(intent);
+                    setResult(RESULT_OK);
+                    finish();
                 }
                 else{
-                    setResult(RESULT_OK);
+                    setResult(RESULT_CANCELED);
                     finish();
                 }
             }
@@ -63,7 +73,6 @@ public class PlayPaperchaseActivity extends AppCompatActivity {
         hintImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                 showingBigPictureAtTheMoment = true;
                  String tmpPath = paperchase.getClueList().get(currentClueId).getHintPicturePath();
                  if (tmpPath != null && !tmpPath.equals("")) {
                     Intent intent = new Intent(getApplicationContext(), MaxPictureActivity.class);
