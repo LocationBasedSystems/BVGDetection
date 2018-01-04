@@ -6,11 +6,11 @@ import de.htwberlin.f4.ai.ma.indoorroutefinder.node.Node;
  * Created by Johann Winter
  */
 
-class DijkstraNode {
+public class DijkstraNode {
 
     private final String id;
 
-    DijkstraNode(Node node) {
+    public DijkstraNode(Node node) {
         this.id = node.getId();
     }
 

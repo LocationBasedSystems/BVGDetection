@@ -43,7 +43,7 @@ public class CosineLocalGlobalCoordinateCalculator implements LocalGlobalCoordin
                 result.setAltitude(altitude);
             }
             Log.d("POSITIONCALCULATOR", "End lat: " + result.getLatitude());
-            Log.d("POSITIONCALCULATOR", "Snd long: " + result.getLongitude());
+            Log.d("POSITIONCALCULATOR", "End long: " + result.getLongitude());
             return result;
         }
         return null;

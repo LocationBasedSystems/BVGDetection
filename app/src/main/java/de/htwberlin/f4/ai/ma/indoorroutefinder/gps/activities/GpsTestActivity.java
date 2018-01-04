@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -31,11 +32,15 @@ import de.htwberlin.f4.ai.ma.indoorroutefinder.gps.node.GlobalNode;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.gps.node.GlobalNodeFactory;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.gps.updaters.GlobalCoordinateUpdater;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.gps.updaters.GlobalCoordinateUpdaterFactory;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.LocationSource;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.Locator;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.LocatorFactory;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.listeners.LocationChangeListener;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.node.Node;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandler;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandlerFactory;
 
-public class GpsTestActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class GpsTestActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, LocationChangeListener {
 
     private DatabaseHandler databaseHandler;
     private List<Node> allNodes;
@@ -50,6 +55,9 @@ public class GpsTestActivity extends BaseActivity implements GoogleApiClient.Con
 
     private GoogleApiClient googleApiClient;
     private Location gpsLocation;
+
+    private Locator locator;
+    private Node nodeLocation;
 
     private ArrayList<String> itemsNodeSpinner;
 
@@ -100,6 +108,10 @@ public class GpsTestActivity extends BaseActivity implements GoogleApiClient.Con
                 txtAccuracy.setText("-");
             }
         });
+
+        this.locator = LocatorFactory.getInstance(this);
+        this.locator.registerLocationListener(this);
+        this.locator.startLocationUpdates();
     }
 
     public void updateGpsPositions(View view) {
@@ -173,5 +185,13 @@ public class GpsTestActivity extends BaseActivity implements GoogleApiClient.Con
     public void onLocationChanged(Location location) {
         this.gpsLocation = location;
         updateUI();
+    }
+
+    @Override
+    public void onLocationChanged(Node newLocation, LocationSource source) {
+        this.nodeLocation = newLocation;
+        if (this.nodeLocation != null) {
+            Log.d("NEUER ORT: ", this.nodeLocation.getId());
+        }
     }
 }
