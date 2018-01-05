@@ -1,5 +1,7 @@
 package de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator;
 
+import android.content.Context;
+
 import com.google.android.gms.location.LocationRequest;
 
 import java.util.List;
@@ -16,4 +18,5 @@ public interface Locator {
     List<Node> sortByDistanceNearestFirst(Node origin, List<Node> nodes);
     LocationRequest getLocationRequest();
     Node getLastLocation();
+    void setContext(Context context);
 }

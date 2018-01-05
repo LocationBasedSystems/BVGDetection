@@ -10,6 +10,9 @@ public class LocatorFactory {
         if (instance == null) {
             instance = new CombinedLocator(context);
         }
+        else{
+            instance.setContext(context);
+        }
         return instance;
     }
 }

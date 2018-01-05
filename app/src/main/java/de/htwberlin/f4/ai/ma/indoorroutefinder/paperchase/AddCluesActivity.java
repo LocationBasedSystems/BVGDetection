@@ -33,6 +33,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.htwberlin.f4.ai.ma.indoorroutefinder.R;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.LocationSource;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.Locator;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.LocatorFactory;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.listeners.LocationChangeListener;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.node.Node;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandler;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandlerFactory;
@@ -47,7 +51,6 @@ public class AddCluesActivity extends AppCompatActivity {
     ArrayList<Node> checkedNodesList;
     DatabaseHandler databaseHandler;
     ArrayAdapter<Node> arrayAdapter;
-    private MenuItem searchMenuItem;
 
 
     @Override
@@ -64,6 +67,7 @@ public class AddCluesActivity extends AppCompatActivity {
         checkedNodesList = new ArrayList<>();
         nodeList.addAll(databaseHandler.getAllNodes());
         allNodesList.addAll(databaseHandler.getAllNodes());
+
         arrayAdapter = new ClueAdapter(this, R.layout.add_from_all_clues_list_item, nodeList); //TODO custom item adapter
         listView.setAdapter(arrayAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -155,14 +159,6 @@ public class AddCluesActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_add_clues, menu);
-//        inflater.inflate(R.menu.search_menu, menu);
-//
-//        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-//        searchMenuItem = menu.findItem(R.id.search);
-//        SearchView searchView = (SearchView) searchMenuItem.getActionView();
-//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-//        searchView.setSubmitButtonEnabled(true);
-//        //searchView.setOnQueryTextListener(this);
         return true;
     }
 

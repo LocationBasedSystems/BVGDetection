@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -230,6 +231,9 @@ public class CombinedLocator implements Locator, LocationListener, AsyncResponse
     }
 
     private synchronized void notifyListeners(LocationSource source) {
+        if (location!=null) {
+            Toast.makeText(this.context, "LocUpdate :" + this.location.getId(), Toast.LENGTH_SHORT).show();
+        }
         for (LocationChangeListener listener : this.listeners) {
             listener.onLocationChanged(this.location, source);
         }
@@ -277,5 +281,10 @@ public class CombinedLocator implements Locator, LocationListener, AsyncResponse
         locationRequest.setFastestInterval(1000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         return locationRequest;
+    }
+
+    @Override
+    public void setContext(Context context){
+        this.context = context;
     }
 }

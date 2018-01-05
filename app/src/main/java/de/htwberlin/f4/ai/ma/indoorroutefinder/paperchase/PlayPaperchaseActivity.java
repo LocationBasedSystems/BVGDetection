@@ -96,7 +96,8 @@ public class PlayPaperchaseActivity extends AppCompatActivity implements Locatio
     }
 
     private void setFields(){
-        currentNodeText.setText("Current: " + locator.getLastLocation().getId() + "  (Ziel: " + paperchase.getClueList().get(currentClueId+1).getLoc().getId()+")");
+        currentNodeText.setText("placeholder");
+        //currentNodeText.setText("Current: " + locator.getLastLocation().getId() + "  (Ziel: " + paperchase.getClueList().get(currentClueId+1).getLoc().getId()+")");
         hintText.setText(paperchase.getClueList().get(currentClueId).getClueText());
 
         try {
@@ -146,7 +147,7 @@ public class PlayPaperchaseActivity extends AppCompatActivity implements Locatio
             currentClueId++;
             setFields();
             Toast.makeText(PlayPaperchaseActivity.this, "Toll, einen weiteren Ort gefunden", Toast.LENGTH_SHORT).show();
-            onLocationChanged(locator.getLastLocation(), null);
+//            onLocationChanged(locator.getLastLocation(), null);
         } else if (currentClueId + 2 == paperchase.getClueList().size()) {
             long millis = System.currentTimeMillis() - millisAtStart;
             Intent intent = new Intent(getApplicationContext(), FinishedPaperchaseActivity.class);
