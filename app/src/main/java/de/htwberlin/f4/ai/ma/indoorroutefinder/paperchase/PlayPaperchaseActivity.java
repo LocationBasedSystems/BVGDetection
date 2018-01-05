@@ -52,36 +52,16 @@ public class PlayPaperchaseActivity extends AppCompatActivity implements Locatio
 
         nextButton = (Button) findViewById(R.id.play_paperchase_next_button);
         hintImage = (ImageView) findViewById(R.id.play_paperchase_hint_image);
-        setFields();
         locator = LocatorFactory.getInstance(getApplicationContext());
         locator.registerLocationListener(this);
         locator.startLocationUpdates();
+        setFields();
+
 
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(currentClueId +2 < paperchase.getClueList().size()){
-                    currentClueId++;
-                    setFields();
-                    //Toast.makeText(PlayPaperchaseActivity.this, "Toll, einen weiteren Ort gefunden", Toast.LENGTH_SHORT).show();
-                }
-                else if(currentClueId +2 == paperchase.getClueList().size()){
-                    long millis = System.currentTimeMillis() - millisAtStart;
-                    Intent intent = new Intent(getApplicationContext(), FinishedPaperchaseActivity.class);
-                    intent.putExtra("time", millis);
-                    intent.putExtra("text", paperchase.getClueList().get(currentClueId+1).getClueText());
-                    locator.unregisterLocationListener(PlayPaperchaseActivity.this);
-                    locator.stopLocationUpdates();
-                    startActivity(intent);
-                    setResult(RESULT_OK);
-                    finish();
-                }
-                else{
-                    setResult(RESULT_CANCELED);
-                    locator.unregisterLocationListener(PlayPaperchaseActivity.this);
-                    locator.stopLocationUpdates();
-                    finish();
-                }
+                next();
             }
         });
         hintImage.setOnClickListener(new View.OnClickListener() {
@@ -102,6 +82,12 @@ public class PlayPaperchaseActivity extends AppCompatActivity implements Locatio
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        onBackPressed();
+    }
+
+    @Override
     public void onBackPressed() {
         setResult(RESULT_CANCELED);
         locator.unregisterLocationListener(this);
@@ -110,11 +96,11 @@ public class PlayPaperchaseActivity extends AppCompatActivity implements Locatio
     }
 
     private void setFields(){
-        currentNodeText.setText(paperchase.getClueList().get(currentClueId).getLoc().getId());
+        currentNodeText.setText("Current: " + locator.getLastLocation().getId() + "  (Ziel: " + paperchase.getClueList().get(currentClueId+1).getLoc().getId()+")");
         hintText.setText(paperchase.getClueList().get(currentClueId).getClueText());
 
         try {
-            Log.d("PICTUREPATH---------", paperchase.getClueList().get(currentClueId).getHintPicturePath());
+            //Log.d("PICTUREPATH---------", paperchase.getClueList().get(currentClueId).getHintPicturePath());
             if (paperchase.getClueList().get(currentClueId).getHintPicturePath() != null && !paperchase.getClueList().get(currentClueId).getHintPicturePath().equals("")) {
                 Log.d("PICTUREPATH---------", paperchase.getClueList().get(currentClueId).getHintPicturePath());
                 Bitmap image = BitmapFactory.decodeFile(paperchase.getClueList().get(currentClueId).getHintPicturePath());
@@ -147,30 +133,35 @@ public class PlayPaperchaseActivity extends AppCompatActivity implements Locatio
 
     @Override
     public void onLocationChanged(Node newLocation, LocationSource source) {
-        currentNodeText.setText(newLocation.getId());
+        currentNodeText.setText("Current: " + newLocation.getId() + "  (Ziel: " + paperchase.getClueList().get(currentClueId+1).getLoc().getId()+")");
         if(newLocation!=null) {
             if (newLocation.getId().equals(paperchase.getClueList().get(currentClueId+1).getLoc().getId())) {
-                if (currentClueId + 2 < paperchase.getClueList().size()) {
-                    currentClueId++;
-                    setFields();
-                    Toast.makeText(PlayPaperchaseActivity.this, "Toll, einen weiteren Ort gefunden", Toast.LENGTH_SHORT).show();
-                } else if (currentClueId + 2 == paperchase.getClueList().size()) {
-                    long millis = System.currentTimeMillis() - millisAtStart;
-                    Intent intent = new Intent(getApplicationContext(), FinishedPaperchaseActivity.class);
-                    intent.putExtra("time", millis);
-                    intent.putExtra("text", paperchase.getClueList().get(currentClueId + 1).getClueText());
-                    locator.unregisterLocationListener(PlayPaperchaseActivity.this);
-                    locator.stopLocationUpdates();
-                    startActivity(intent);
-                    setResult(RESULT_OK);
-                    finish();
-                } else {
-                    setResult(RESULT_CANCELED);
-                    locator.unregisterLocationListener(PlayPaperchaseActivity.this);
-                    locator.stopLocationUpdates();
-                    finish();
-                }
+                next();
             }
+        }
+    }
+
+    private void next(){
+        if (currentClueId + 2 < paperchase.getClueList().size()) {
+            currentClueId++;
+            setFields();
+            Toast.makeText(PlayPaperchaseActivity.this, "Toll, einen weiteren Ort gefunden", Toast.LENGTH_SHORT).show();
+            onLocationChanged(locator.getLastLocation(), null);
+        } else if (currentClueId + 2 == paperchase.getClueList().size()) {
+            long millis = System.currentTimeMillis() - millisAtStart;
+            Intent intent = new Intent(getApplicationContext(), FinishedPaperchaseActivity.class);
+            intent.putExtra("time", millis);
+            intent.putExtra("text", paperchase.getClueList().get(currentClueId + 1).getClueText());
+            locator.unregisterLocationListener(PlayPaperchaseActivity.this);
+            locator.stopLocationUpdates();
+            startActivity(intent);
+            setResult(RESULT_OK);
+            finish();
+        } else {
+            setResult(RESULT_CANCELED);
+            locator.unregisterLocationListener(PlayPaperchaseActivity.this);
+            locator.stopLocationUpdates();
+            finish();
         }
     }
 }
