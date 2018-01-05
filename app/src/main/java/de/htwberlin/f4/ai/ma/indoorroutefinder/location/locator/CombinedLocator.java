@@ -201,10 +201,13 @@ public class CombinedLocator implements Locator, LocationListener, AsyncResponse
             final String foundNode = locationCalculator.calculateNodeId(fingerprint);
 
             if (foundNode != null) {
+                boolean notify = this.location == null || !this.location.getId().equals(foundNode);
                 this.location = databaseHandler.getNode(foundNode);
                 if (this.location != null) {
                     //TODO Test plausability using gps?
-                    notifyListeners(LocationSource.WIFI_FINGERPRINT);
+                    if (notify) {
+                        notifyListeners(LocationSource.WIFI_FINGERPRINT);
+                    }
                     this.timestamp = System.currentTimeMillis();
                 }
             }
@@ -233,8 +236,11 @@ public class CombinedLocator implements Locator, LocationListener, AsyncResponse
     private void fallbackToGPS() {
         //TODO Try to set Node based on GPS, remember to update timestamp and notify listeners
         this.timestamp = -1;
+        boolean notify = this.location != null;
         this.location = null;
-        notifyListeners(LocationSource.GOOGLE_PLAY_SERVICES_FUSED_LOCATION_API);
+        if (notify) {
+            notifyListeners(LocationSource.GOOGLE_PLAY_SERVICES_FUSED_LOCATION_API);
+        }
     }
 
     private void startWiFiLocationUpdates() {
