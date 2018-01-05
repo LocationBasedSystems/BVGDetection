@@ -21,10 +21,14 @@ import java.io.FileNotFoundException;
 
 import de.htwberlin.f4.ai.ma.indoorroutefinder.MaxPictureActivity;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.R;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.LocationSource;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.Locator;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.LocatorFactory;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.listeners.LocationChangeListener;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.node.Node;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.models.Paperchase;
 
-public class PlayPaperchaseActivity extends AppCompatActivity {
+public class PlayPaperchaseActivity extends AppCompatActivity implements LocationChangeListener {
 
     private int currentClueId = 0;
     Paperchase paperchase;
@@ -33,6 +37,7 @@ public class PlayPaperchaseActivity extends AppCompatActivity {
     Button nextButton;
     ImageView hintImage;
     private long millisAtStart;
+    Locator locator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +49,14 @@ public class PlayPaperchaseActivity extends AppCompatActivity {
         setTitle(paperchase.getName());
         hintText = (TextView) findViewById(R.id.play_paperchase_hint);
         currentNodeText = (TextView) findViewById(R.id.play_paperchase_current_node_id);
+
         nextButton = (Button) findViewById(R.id.play_paperchase_next_button);
         hintImage = (ImageView) findViewById(R.id.play_paperchase_hint_image);
         setFields();
+        locator = LocatorFactory.getInstance(getApplicationContext());
+        locator.registerLocationListener(this);
+        locator.startLocationUpdates();
+
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,12 +70,16 @@ public class PlayPaperchaseActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), FinishedPaperchaseActivity.class);
                     intent.putExtra("time", millis);
                     intent.putExtra("text", paperchase.getClueList().get(currentClueId+1).getClueText());
+                    locator.unregisterLocationListener(PlayPaperchaseActivity.this);
+                    locator.stopLocationUpdates();
                     startActivity(intent);
                     setResult(RESULT_OK);
                     finish();
                 }
                 else{
                     setResult(RESULT_CANCELED);
+                    locator.unregisterLocationListener(PlayPaperchaseActivity.this);
+                    locator.stopLocationUpdates();
                     finish();
                 }
             }
@@ -90,6 +104,8 @@ public class PlayPaperchaseActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         setResult(RESULT_CANCELED);
+        locator.unregisterLocationListener(this);
+        locator.stopLocationUpdates();
         finish();
     }
 
@@ -127,5 +143,34 @@ public class PlayPaperchaseActivity extends AppCompatActivity {
             hintText.setTypeface(hintText.getTypeface(), Typeface.BOLD);
         }
 
+    }
+
+    @Override
+    public void onLocationChanged(Node newLocation, LocationSource source) {
+        currentNodeText.setText(newLocation.getId());
+        if(newLocation!=null) {
+            if (newLocation.getId().equals(paperchase.getClueList().get(currentClueId+1).getLoc().getId())) {
+                if (currentClueId + 2 < paperchase.getClueList().size()) {
+                    currentClueId++;
+                    setFields();
+                    Toast.makeText(PlayPaperchaseActivity.this, "Toll, einen weiteren Ort gefunden", Toast.LENGTH_SHORT).show();
+                } else if (currentClueId + 2 == paperchase.getClueList().size()) {
+                    long millis = System.currentTimeMillis() - millisAtStart;
+                    Intent intent = new Intent(getApplicationContext(), FinishedPaperchaseActivity.class);
+                    intent.putExtra("time", millis);
+                    intent.putExtra("text", paperchase.getClueList().get(currentClueId + 1).getClueText());
+                    locator.unregisterLocationListener(PlayPaperchaseActivity.this);
+                    locator.stopLocationUpdates();
+                    startActivity(intent);
+                    setResult(RESULT_OK);
+                    finish();
+                } else {
+                    setResult(RESULT_CANCELED);
+                    locator.unregisterLocationListener(PlayPaperchaseActivity.this);
+                    locator.stopLocationUpdates();
+                    finish();
+                }
+            }
+        }
     }
 }

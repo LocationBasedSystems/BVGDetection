@@ -21,9 +21,13 @@ import android.widget.Toast;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.R;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.RouteFinderActivity;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.LocationSource;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.Locator;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.LocatorFactory;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.listeners.LocationChangeListener;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.node.Node;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.models.Paperchase;
+
+import static de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.LocatorFactory.getInstance;
 
 public class StartPaperchaseActivity extends AppCompatActivity implements LocationChangeListener{
 
@@ -36,6 +40,8 @@ public class StartPaperchaseActivity extends AppCompatActivity implements Locati
     Button beginButton;
     Paperchase paperchase;
     private final static int REQUEST_NAV = 2;
+    Locator locator;
+    private String oldLocId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +56,8 @@ public class StartPaperchaseActivity extends AppCompatActivity implements Locati
         navigateButton = (Button) findViewById(R.id.start_navigate_to_first_clue);
         beginButton = (Button) findViewById(R.id.start_begin_paperchase);
 
-        //beginButton.setEnabled(false); //TODO wenn emils listener fertig
+
+
         paperchase = (Paperchase) getIntent().getSerializableExtra("paperchase");
         if(paperchase == null){
             setResult(RESULT_CANCELED);
@@ -73,12 +80,22 @@ public class StartPaperchaseActivity extends AppCompatActivity implements Locati
             } else {
                 firstClueImage.setVisibility(View.INVISIBLE);
             }
+
+            beginButton.setEnabled(false);
+            navigateButton.setEnabled(false);
+            locator = LocatorFactory.getInstance(getApplicationContext());
+            locator.registerLocationListener(this);
+            locator.startLocationUpdates();
+
+
             navigateButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(getApplicationContext(), RouteFinderActivity.class);
                     intent.putExtra("paperchase", true);
                     intent.putExtra("nodeId", paperchase.getClueList().get(0).getLoc().getId());
+                    locator.unregisterLocationListener(StartPaperchaseActivity.this);
+                    locator.stopLocationUpdates();
                     startActivityForResult(intent, REQUEST_NAV);
                     //Toast.makeText(StartPaperchaseActivity.this, "Not yet implemented", Toast.LENGTH_SHORT).show();
                     //TODO routefinder with custom nodes selected
@@ -87,6 +104,8 @@ public class StartPaperchaseActivity extends AppCompatActivity implements Locati
             beginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    locator.unregisterLocationListener(StartPaperchaseActivity.this);
+                    locator.stopLocationUpdates();
                     Intent intent = new Intent(getApplicationContext(), PlayPaperchaseActivity.class);
                     intent.putExtra("paperchase", paperchase);
                     startActivityForResult(intent, 1);
@@ -108,23 +127,46 @@ public class StartPaperchaseActivity extends AppCompatActivity implements Locati
             }
         }
         else if(requestCode == REQUEST_NAV){
-            Toast.makeText(this, "welcome back", Toast.LENGTH_SHORT).show();
+            if(resultCode == RESULT_CANCELED){
+                Toast.makeText(this, "already there", Toast.LENGTH_SHORT).show();
+                locator.registerLocationListener(this);
+                locator.startLocationUpdates();
+            }
+            else if(resultCode == RESULT_OK){
+                locator.registerLocationListener(this);
+                locator.startLocationUpdates();
+            }
+
         }
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        locator.unregisterLocationListener(StartPaperchaseActivity.this);
+        locator.stopLocationUpdates();
+        setResult(RESULT_CANCELED);
+    }
+
+    @Override
     public void onBackPressed() {
+        locator.unregisterLocationListener(StartPaperchaseActivity.this);
+        locator.stopLocationUpdates();
         setResult(RESULT_CANCELED);
         finish();
     }
 
     @Override
     public void onLocationChanged(Node newLocation, LocationSource source) {
-        if(newLocation.equals(paperchase.getClueList().get(0))){
-            beginButton.setVisibility(View.VISIBLE);
-        }
-        else{
-
+        if(newLocation!=null && paperchase!=null && paperchase.getClueList()!=null) {
+            navigateButton.setEnabled(true);
+            Toast.makeText(this, "Aktuelle Position:  " + newLocation.getId(), Toast.LENGTH_SHORT).show();
+            oldLocId=newLocation.getId();
+            if (newLocation.getId().equals(paperchase.getClueList().get(0).getLoc().getId())) {
+                beginButton.setEnabled(true);
+            } else {
+                beginButton.setEnabled(false);
+            }
         }
     }
 }

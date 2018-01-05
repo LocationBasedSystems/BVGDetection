@@ -22,6 +22,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.Locator;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.LocatorFactory;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.wifi_scanner.WifiScanner;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.wifi_scanner.WifiScannerFactory;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.android.BaseActivity;
@@ -126,8 +128,7 @@ public class RouteFinderActivity extends BaseActivity implements AsyncResponse {
                 }
             });
             findRouteButton.setEnabled(false);
-            // itemsStartNodeSpinner.add  &&  selectedStartNode = Locator.getCurrentLocation //TODO emil muss das implementieren
-            itemsStartNodeSpinner.add(allNodes.get(1).getId());
+            itemsStartNodeSpinner.add(LocatorFactory.getInstance(getApplicationContext()).getLastLocation().getId());
             selectedStartNode = itemsStartNodeSpinner.get(0);
             itemsDestNodeSpinner.add(getIntent().getStringExtra("nodeId"));
             resultListAdapter = new NodeListAdapter(this, nodeNames, nodeDescriptions, nodePicturePaths);
