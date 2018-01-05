@@ -128,7 +128,7 @@ public class PaperchaseMainActivity extends BaseActivity {
                 break;
             case REQUEST_START:
                 if(resultCode == RESULT_OK){
-                    Toast.makeText(this, "WAHNSINN!!! DIE SCHNITZELJAGD WURDE ERFOLGREICH GESCHAFFT!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "WAHNSINN!!! DIE SCHNITZELJAGD WURDE ERFOLGREICH GESCHAFFT!", Toast.LENGTH_SHORT).show();
                 }
                 else if(resultCode == RESULT_CANCELED){
                     Toast.makeText(this, "Schade, Schnitzeljagd abgebrochen", Toast.LENGTH_SHORT).show();;

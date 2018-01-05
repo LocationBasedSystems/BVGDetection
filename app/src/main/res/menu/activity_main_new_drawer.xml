@@ -24,6 +24,7 @@
             android:title="Route finden" />
         <item
             android:id="@+id/nav_paperchase"
+            android:icon="@drawable/ic_videogame_asset_black_36dp"
             android:title="Schnitzeljagd" />
         <item
             android:id="@+id/nav_gps_test"

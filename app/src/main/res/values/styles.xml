@@ -16,7 +16,7 @@
     <style name="GreenActionBarTheme" parent="@style/Theme.AppCompat.Light">
         <item name="android:actionBarStyle">@style/GreenActionBar</item>
     </style>
-    <style name="GreenActionBar" parent="@android:style/Widget.Holo.ActionBar">
+    <style name="GreenActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
         <item name="android:background">@color/htw_green</item>
     </style>
 

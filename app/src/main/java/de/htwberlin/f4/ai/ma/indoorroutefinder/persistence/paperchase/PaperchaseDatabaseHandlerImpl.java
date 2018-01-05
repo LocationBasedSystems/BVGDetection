@@ -190,8 +190,15 @@ public class PaperchaseDatabaseHandlerImpl extends SQLiteOpenHelper implements P
         String selectQuery = "SELECT * FROM " + CLUES_TABLE + " WHERE " + CLUE_ID + "='" + clueId + "'";
         Clue clue  = null;
         Cursor cursor = database.rawQuery(selectQuery, null);
-        if(cursor.moveToFirst() && databaseHandler.getNode(cursor.getString(3))!=null){
-            clue = new Clue(cursor.getString(2),cursor.getInt(1), databaseHandler.getNode(cursor.getString(3)), cursor.getString(5));
+        if(cursor.moveToFirst()){
+            if(databaseHandler.getNode(cursor.getString(3))!=null){
+                clue = new Clue(cursor.getString(2), cursor.getInt(1), databaseHandler.getNode(cursor.getString(3)), cursor.getString(5));
+            }
+            else{
+                clue = new Clue(cursor.getString(2), cursor.getInt(1), null, cursor.getString(5));
+
+            }
+
         }
         return clue;
     }
@@ -206,7 +213,10 @@ public class PaperchaseDatabaseHandlerImpl extends SQLiteOpenHelper implements P
             do {
                 if(databaseHandler.getNode(cursor.getString(3))!=null) {
                     clueList.add(new Clue(cursor.getString(2), cursor.getInt(1), databaseHandler.getNode(cursor.getString(3)),cursor.getString(5)));
-                    //Log.d("DB:PATH GET ------:", cursor.getString(5));
+                }
+                else{
+                    clueList.add(new Clue(cursor.getString(2), cursor.getInt(1), null, cursor.getString(5)));
+
                 }
             }while(cursor.moveToNext());
         }
