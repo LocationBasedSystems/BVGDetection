@@ -82,10 +82,19 @@ public class PlayPaperchaseActivity extends AppCompatActivity implements Locatio
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        onBackPressed();
+    protected void onPause() {
+        super.onPause();
+        locator.unregisterLocationListener(this);
+        locator.stopLocationUpdates();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        locator.registerLocationListener(this);
+        locator.startLocationUpdates();
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -97,10 +106,10 @@ public class PlayPaperchaseActivity extends AppCompatActivity implements Locatio
 
     private void setFields(){
         currentNodeText.setText("placeholder");
-        //currentNodeText.setText("Current: " + locator.getLastLocation().getId() + "  (Ziel: " + paperchase.getClueList().get(currentClueId+1).getLoc().getId()+")");
+        currentNodeText.setText("Current: " + locator.getLastLocation().getId() + "  (Ziel: " + paperchase.getClueList().get(currentClueId+1).getLoc().getId()+")");
         hintText.setText(paperchase.getClueList().get(currentClueId).getClueText());
 
-        try {
+        try { //This part blurs the image
             //Log.d("PICTUREPATH---------", paperchase.getClueList().get(currentClueId).getHintPicturePath());
             if (paperchase.getClueList().get(currentClueId).getHintPicturePath() != null && !paperchase.getClueList().get(currentClueId).getHintPicturePath().equals("")) {
                 Log.d("PICTUREPATH---------", paperchase.getClueList().get(currentClueId).getHintPicturePath());
@@ -146,7 +155,7 @@ public class PlayPaperchaseActivity extends AppCompatActivity implements Locatio
         if (currentClueId + 2 < paperchase.getClueList().size()) {
             currentClueId++;
             setFields();
-            Toast.makeText(PlayPaperchaseActivity.this, "Toll, einen weiteren Ort gefunden", Toast.LENGTH_SHORT).show();
+            Toast.makeText(PlayPaperchaseActivity.this, "Ort gefunden", Toast.LENGTH_SHORT).show();
 //            onLocationChanged(locator.getLastLocation(), null);
         } else if (currentClueId + 2 == paperchase.getClueList().size()) {
             long millis = System.currentTimeMillis() - millisAtStart;

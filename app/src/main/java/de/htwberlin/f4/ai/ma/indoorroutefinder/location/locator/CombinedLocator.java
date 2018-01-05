@@ -232,7 +232,7 @@ public class CombinedLocator implements Locator, LocationListener, AsyncResponse
 
     private synchronized void notifyListeners(LocationSource source) {
         if (location!=null) {
-            Toast.makeText(this.context, "LocUpdate :" + this.location.getId(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this.context, "LocUpdate :" + this.location.getId(), Toast.LENGTH_SHORT).show();
         }
         for (LocationChangeListener listener : this.listeners) {
             listener.onLocationChanged(this.location, source);
