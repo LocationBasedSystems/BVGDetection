@@ -23,6 +23,7 @@ import de.htwberlin.f4.ai.ma.indoorroutefinder.ImportExportActivity;
 //import de.htwberlin.f4.ai.ma.indoorroutefinder.NodeRecordActivity;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.NodeRecordEditActivity;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.SettingsActivity;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.beacon.BeaconMainActivity;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.gps.activities.GpsTestActivity;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.PaperchaseMainActivity;
 
@@ -94,6 +95,10 @@ public class BaseActivity extends AppCompatActivity {
                         loadGpsTest();
                         drawerLayout.closeDrawers();
                         break;
+                    case R.id.nav_beacon:
+                        loadBeacon();
+                        drawerLayout.closeDrawers();
+                        break;
                     case R.id.nav_import:
                         loadImportExport();
                         drawerLayout.closeDrawers();
@@ -125,8 +130,11 @@ public class BaseActivity extends AppCompatActivity {
                 }
                 return false;
             }
+
         });
     }
+
+
 
 
     @Override
@@ -173,6 +181,12 @@ public class BaseActivity extends AppCompatActivity {
 
     public void loadGpsTest() {
         Intent intent = new Intent(getApplicationContext(), GpsTestActivity.class);
+        finish();
+        startActivity(intent);
+    }
+
+    public  void loadBeacon() {
+        Intent intent = new Intent(getApplicationContext(), BeaconMainActivity.class);
         finish();
         startActivity(intent);
     }

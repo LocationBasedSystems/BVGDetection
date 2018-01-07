@@ -41,7 +41,7 @@
         <activity
             android:name=".paperchase.AddCluesActivity"
             android:parentActivityName=".paperchase.AddPaperchaseActivity"
-            android:theme="@style/GreenActionBarTheme"></activity>
+            android:theme="@style/GreenActionBarTheme" />
         <activity
             android:name=".paperchase.StartPaperchaseActivity"
             android:parentActivityName=".paperchase.PaperchaseMainActivity"
@@ -52,9 +52,7 @@
             android:theme="@style/GreenActionBarTheme" />
         <activity
             android:name=".paperchase.FinishedPaperchaseActivity"
-            android:theme="@style/GreenActionBarTheme">
-
-        </activity>
+            android:theme="@style/GreenActionBarTheme"></activity>
         <activity
             android:name=".NodeRecordEditActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -75,7 +73,7 @@
         -->
 
         <activity android:name=".gps.activities.GpsTestActivity" />
-
+        <activity android:name=".beacon.BeaconMainActivity"></activity>
     </application>
 
 </manifest>
