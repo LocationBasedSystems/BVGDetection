@@ -105,13 +105,13 @@ public class CombinedLocator implements Locator, LocationListener, AsyncResponse
     }
 
     @Override
-    public void registerLocationListener(LocationChangeListener listener) {
+    public synchronized void registerLocationListener(LocationChangeListener listener) {
         this.listeners.add(listener);
         listener.onLocationChanged(this.location, LocationSource.GOOGLE_PLAY_SERVICES_FUSED_LOCATION_API);
     }
 
     @Override
-    public void unregisterLocationListener(LocationChangeListener listener) {
+    public synchronized void unregisterLocationListener(LocationChangeListener listener) {
         this.listeners.remove(listener);
 
     }
