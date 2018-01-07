@@ -192,6 +192,10 @@ public class GpsTestActivity extends BaseActivity implements GoogleApiClient.Con
         this.nodeLocation = newLocation;
         if (this.nodeLocation != null) {
             Log.d("NEUER ORT: ", this.nodeLocation.getId());
+            Toast.makeText(this, "Ort: " + this.nodeLocation.getId(), Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(this, "Ort: null", Toast.LENGTH_SHORT).show();
         }
     }
 }

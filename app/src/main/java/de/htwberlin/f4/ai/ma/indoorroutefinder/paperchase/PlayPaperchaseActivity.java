@@ -162,14 +162,22 @@ public class PlayPaperchaseActivity extends AppCompatActivity implements Locatio
             Intent intent = new Intent(getApplicationContext(), FinishedPaperchaseActivity.class);
             intent.putExtra("time", millis);
             intent.putExtra("text", paperchase.getClueList().get(currentClueId + 1).getClueText());
-            locator.unregisterLocationListener(PlayPaperchaseActivity.this);
+            new Thread(new Runnable() {
+                public void run() {
+                    locator.unregisterLocationListener(PlayPaperchaseActivity.this);
+                }
+            }).start();
             locator.stopLocationUpdates();
             startActivity(intent);
             setResult(RESULT_OK);
             finish();
         } else {
             setResult(RESULT_CANCELED);
-            locator.unregisterLocationListener(PlayPaperchaseActivity.this);
+            new Thread(new Runnable() {
+                public void run() {
+                    locator.unregisterLocationListener(PlayPaperchaseActivity.this);
+                }
+            }).start();
             locator.stopLocationUpdates();
             finish();
         }
