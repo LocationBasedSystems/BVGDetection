@@ -63,7 +63,7 @@ public class SimpleHaversineLocalGlobalCoordinateCalculator implements LocalGlob
     }
 
     private double correctLatitude(double uncorrectedLatitude) {
-        //TODO This method is not tested and will may not work correctly
+        //TODO This method is not tested and may not work correctly
         if (uncorrectedLatitude < -90) {
             return uncorrectedLatitude > -180 ? -90 - (uncorrectedLatitude + 90) : correctLatitude(uncorrectedLatitude + 180);
         }
@@ -76,7 +76,7 @@ public class SimpleHaversineLocalGlobalCoordinateCalculator implements LocalGlob
     }
 
     private double correctLongitude(double uncorrectedLongitude) {
-        //TODO This method is not tested and will may not work correctly
+        //TODO This method is not tested and may not work correctly
         if (uncorrectedLongitude < -180) {
             return uncorrectedLongitude > -360 ? 180 - (uncorrectedLongitude + 180) : correctLongitude(uncorrectedLongitude + 360);
         }
