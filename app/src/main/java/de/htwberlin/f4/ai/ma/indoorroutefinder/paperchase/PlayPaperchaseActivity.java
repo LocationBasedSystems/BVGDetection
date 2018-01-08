@@ -1,9 +1,11 @@
 package de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.os.Vibrator;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
@@ -156,6 +158,9 @@ public class PlayPaperchaseActivity extends AppCompatActivity implements Locatio
             currentClueId++;
             setFields();
             Toast.makeText(PlayPaperchaseActivity.this, "Ort gefunden", Toast.LENGTH_SHORT).show();
+            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            // Vibrate for 500 milliseconds
+            v.vibrate(500);
 //            onLocationChanged(locator.getLastLocation(), null);
         } else if (currentClueId + 2 == paperchase.getClueList().size()) {
             long millis = System.currentTimeMillis() - millisAtStart;
@@ -168,6 +173,9 @@ public class PlayPaperchaseActivity extends AppCompatActivity implements Locatio
                 }
             }).start();
             locator.stopLocationUpdates();
+            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            // Vibrate for 500 milliseconds
+            v.vibrate(1500);
             startActivity(intent);
             setResult(RESULT_OK);
             currentClueId++;
