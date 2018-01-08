@@ -260,6 +260,7 @@ public class AddPaperchaseActivity extends AppCompatActivity  implements  Recycl
         if(requestCode == 1){
             switch (resultCode){
                 case RESULT_OK:
+                    Toast.makeText(this, "ok", Toast.LENGTH_SHORT).show();
                     Bundle clueBundle = data.getBundleExtra("clues");
                     ArrayList<Node> clues = (ArrayList<Node>) clueBundle.getSerializable("clues");
                     for(Node node : clues){
@@ -268,7 +269,10 @@ public class AddPaperchaseActivity extends AppCompatActivity  implements  Recycl
                         listAdapter.notifyDataSetChanged();
                     }
                 case RESULT_CANCELED:
-                    break;
+                    Toast.makeText(this, "canceled", Toast.LENGTH_SHORT).show();
+                    //paperchaseName.setText(paperchase.getName());
+                    //paperchaseDescription.setText(paperchase.getDescription());
+                    //listAdapter.notifyDataSetChanged();
             }
         }
         else if(requestCode == CAM_REQUEST){

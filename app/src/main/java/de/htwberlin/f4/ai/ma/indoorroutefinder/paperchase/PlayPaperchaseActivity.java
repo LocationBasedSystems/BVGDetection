@@ -170,6 +170,7 @@ public class PlayPaperchaseActivity extends AppCompatActivity implements Locatio
             locator.stopLocationUpdates();
             startActivity(intent);
             setResult(RESULT_OK);
+            currentClueId++;
             finish();
         } else {
             setResult(RESULT_CANCELED);

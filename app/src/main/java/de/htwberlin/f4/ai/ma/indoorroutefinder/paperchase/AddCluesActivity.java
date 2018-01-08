@@ -164,9 +164,10 @@ public class AddCluesActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = new Intent();
         switch (item.getItemId()) {
             case R.id.action_cart:
-                Intent intent = new Intent();
+                intent = new Intent();
                 if(checkedNodesList.isEmpty()){
                     setResult(RESULT_CANCELED, intent);
                     Toast.makeText(getApplicationContext(),"Keine Clues hinzugefügt...", Toast.LENGTH_SHORT).show();
@@ -180,9 +181,9 @@ public class AddCluesActivity extends AppCompatActivity {
                 finish();
                 return true;
             case android.R.id.home:
-                setResult(RESULT_CANCELED);
+                setResult(RESULT_CANCELED, intent);
                 finish();
-                return false;
+                return true;
             default:
                 return true;
         }
@@ -190,7 +191,8 @@ public class AddCluesActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        setResult(RESULT_CANCELED);
+        Intent intent = new Intent();
+        setResult(RESULT_CANCELED, intent);
         finish();
     }
 }
