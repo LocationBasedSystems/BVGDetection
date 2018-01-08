@@ -14,6 +14,6 @@ public class BeaconMainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
         getLayoutInflater().inflate(R.layout.activity_beacon_main, contentFrameLayout);
-        setTitle("I bims 1 Beacon ");
+        setTitle("Beacon ");
     }
 }
