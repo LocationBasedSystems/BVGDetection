@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.SQLDataException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -490,17 +491,38 @@ class DatabaseHandlerImpl extends SQLiteOpenHelper implements DatabaseHandler {
 
         File oldDb = new File(DB_FILEPATH);
         File newDb = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/IndoorPositioning/Exported/indoor_data.db");
+        SQLiteDatabase oldData = getWritableDatabase();
 
-        if (newDb.exists()) {
-            System.out.println("+++ new db exists");
-            FileUtilities.copyFile(new FileInputStream(newDb), new FileOutputStream(oldDb));
-            // Access the copied database so SQLiteHelper will cache it and mark it as created
-            getWritableDatabase().close();
-            return true;
+        synchronized (oldData) {
+            if (newDb.exists()) {
+                System.out.println("+++ new db exists");
+                FileUtilities.copyFile(new FileInputStream(newDb), new FileOutputStream(oldDb));
+                // Access the copied database so SQLiteHelper will cache it and mark it as created
+                getWritableDatabase().close();
+                return true;
+            }
+        }
+        synchronized (oldData){
+            addOldNodes(oldData);
         }
         return false;
     }
 
+    private void addOldNodes(SQLiteDatabase oldDb) {
+        Cursor cursor = oldDb.rawQuery("SELECT * FROM " + NODES_TABLE, null);
+        cursor.moveToFirst();
+        while (cursor.moveToNext()){
+            Fingerprint fingerprint;
+                // Check if fingerprint exists, else create NULL object for fingerprint
+                if (cursor.getString(3) == null) {
+                    fingerprint = null;
+                } else {
+                    fingerprint = FingerprintFactory.createInstance(cursor.getString(2), jsonConverter.convertJsonToSignalSampleList(cursor.getString(3)));
+                }
+
+                insertNode(NodeFactory.createInstance(cursor.getString(0), cursor.getString(1), fingerprint, cursor.getString(4), cursor.getString(5), cursor.getString(6)));
+        }
+    }
 
 
     //------------------- E X P O R T ------------------------------------------------------------
