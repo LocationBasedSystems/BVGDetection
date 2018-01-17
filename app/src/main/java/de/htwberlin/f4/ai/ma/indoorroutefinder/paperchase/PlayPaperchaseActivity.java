@@ -63,7 +63,7 @@ public class PlayPaperchaseActivity extends AppCompatActivity implements Locatio
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                next();
+                next(true);
             }
         });
         hintImage.setOnClickListener(new View.OnClickListener() {
@@ -145,23 +145,29 @@ public class PlayPaperchaseActivity extends AppCompatActivity implements Locatio
 
     @Override
     public void onLocationChanged(Node newLocation, LocationSource source) {
-        currentNodeText.setText("Current: " + newLocation.getId() + "  (Ziel: " + paperchase.getClueList().get(currentClueId+1).getLoc().getId()+")");
+        if(currentClueId+1 < paperchase.getClueList().size()) {
+            currentNodeText.setText("Current: " + newLocation.getId() + "  (Ziel: " + paperchase.getClueList().get(currentClueId + 1).getLoc().getId() + ")");
+        }
         if(newLocation!=null) {
-            if (newLocation.getId().equals(paperchase.getClueList().get(currentClueId+1).getLoc().getId())) {
-                next();
+            if(currentClueId+1 < paperchase.getClueList().size()) {
+                currentNodeText.setText("Current: " + newLocation.getId() + "  (Ziel: " + paperchase.getClueList().get(currentClueId + 1).getLoc().getId() + ")");
+                if (newLocation.getId().equals(paperchase.getClueList().get(currentClueId + 1).getLoc().getId())) {
+                    next(false);
+                }
             }
         }
     }
 
-    private void next(){
+    private void next(boolean debug){
         if (currentClueId + 2 < paperchase.getClueList().size()) {
             currentClueId++;
             setFields();
-            //Toast.makeText(PlayPaperchaseActivity.this, "Ort gefunden", Toast.LENGTH_SHORT).show();
             Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
             // Vibrate for 500 milliseconds
             v.vibrate(500);
-//            onLocationChanged(locator.getLastLocation(), null);
+            if(debug) {
+                onLocationChanged(locator.getLastLocation(), null);
+        }
         } else if (currentClueId + 2 == paperchase.getClueList().size()) {
             long millis = System.currentTimeMillis() - millisAtStart;
             Intent intent = new Intent(getApplicationContext(), FinishedPaperchaseActivity.class);
