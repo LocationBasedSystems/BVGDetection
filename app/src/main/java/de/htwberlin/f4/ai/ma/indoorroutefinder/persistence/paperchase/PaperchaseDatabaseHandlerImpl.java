@@ -147,7 +147,7 @@ public class PaperchaseDatabaseHandlerImpl extends SQLiteOpenHelper implements P
     @Override
     public void updatePaperchase(Paperchase paperchase, String oldPaperchaseName) {
         SQLiteDatabase database = this.getWritableDatabase();
-        if(checkIfPaperchaseExists(paperchase.getName())){
+        if(checkIfPaperchaseExists(oldPaperchaseName)){
 
 
             ContentValues values = new ContentValues();
@@ -156,7 +156,7 @@ public class PaperchaseDatabaseHandlerImpl extends SQLiteOpenHelper implements P
             values.put(PAPERCHASE_DESCRIPTION, paperchase.getDescription());
             database.update(PAPERCHASES_TABLE, values, PAPERCHASE_NAME + "='" + oldPaperchaseName + "'", null);
 
-            deleteCluesByPaperchase(paperchase.getName());
+            deleteCluesByPaperchase(oldPaperchaseName);
             for(Clue clue : paperchase.getClueList()){
                 insertClue(clue, paperchase.getName());
             }

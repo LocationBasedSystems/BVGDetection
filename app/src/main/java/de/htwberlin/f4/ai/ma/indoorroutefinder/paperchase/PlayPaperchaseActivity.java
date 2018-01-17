@@ -157,7 +157,7 @@ public class PlayPaperchaseActivity extends AppCompatActivity implements Locatio
         if (currentClueId + 2 < paperchase.getClueList().size()) {
             currentClueId++;
             setFields();
-            Toast.makeText(PlayPaperchaseActivity.this, "Ort gefunden", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(PlayPaperchaseActivity.this, "Ort gefunden", Toast.LENGTH_SHORT).show();
             Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
             // Vibrate for 500 milliseconds
             v.vibrate(500);

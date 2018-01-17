@@ -1,5 +1,6 @@
 package de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -40,7 +41,7 @@ import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandler;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandlerFactory;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.FileUtilities;
 
-public class AddPaperchaseActivity extends AppCompatActivity  implements  RecyclerViewClickListener{
+public class AddPaperchaseActivity extends AppCompatActivity implements  RecyclerViewClickListener{
     private TextInputEditText paperchaseName;
     private TextInputEditText paperchaseDescription;
     private Paperchase paperchase;
@@ -237,18 +238,27 @@ public class AddPaperchaseActivity extends AppCompatActivity  implements  Recycl
                     return false;
                 }
             case android.R.id.home:
-                setResult(RESULT_CANCELED);
-                finish();
-                return false;
+                new AlertDialog.Builder(this)
+                        .setMessage("Soll die Schnitzeljagderstellung wirklich abgebrochen werden?")
+                        .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                setResult(RESULT_CANCELED);
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .create()
+                        .show();
+
+                return true;
             default:
                 return true;
         }
     }
-    @Override
-    public void onBackPressed() {
-        setResult(RESULT_CANCELED);
-        finish();
-    }
+
 
     public void fabClicked(View view) {
         final Intent intent = new Intent(this, AddCluesActivity.class);
@@ -260,7 +270,6 @@ public class AddPaperchaseActivity extends AppCompatActivity  implements  Recycl
         if(requestCode == 1){
             switch (resultCode){
                 case RESULT_OK:
-                    Toast.makeText(this, "ok", Toast.LENGTH_SHORT).show();
                     Bundle clueBundle = data.getBundleExtra("clues");
                     ArrayList<Node> clues = (ArrayList<Node>) clueBundle.getSerializable("clues");
                     for(Node node : clues){
@@ -269,10 +278,6 @@ public class AddPaperchaseActivity extends AppCompatActivity  implements  Recycl
                         listAdapter.notifyDataSetChanged();
                     }
                 case RESULT_CANCELED:
-                    Toast.makeText(this, "canceled", Toast.LENGTH_SHORT).show();
-                    //paperchaseName.setText(paperchase.getName());
-                    //paperchaseDescription.setText(paperchase.getDescription());
-                    //listAdapter.notifyDataSetChanged();
             }
         }
         else if(requestCode == CAM_REQUEST){

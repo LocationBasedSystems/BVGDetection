@@ -170,7 +170,7 @@ public class AddCluesActivity extends AppCompatActivity {
                 intent = new Intent();
                 if(checkedNodesList.isEmpty()){
                     setResult(RESULT_CANCELED, intent);
-                    Toast.makeText(getApplicationContext(),"Keine Clues hinzugefügt...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Keine Clues hinzugefügt", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     Bundle clueBundle = new Bundle();

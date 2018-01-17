@@ -78,7 +78,7 @@ public class PaperchaseMainActivity extends BaseActivity {
     public boolean onContextItemSelected(MenuItem item) {
         final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         if(item.getItemId() == R.id.paperchase_delete){
-            new AlertDialog.Builder(getApplicationContext())
+            new AlertDialog.Builder(this)
                     .setTitle(getString(R.string.delete_entry_title_question))
                     .setMessage("Soll die Schnitzeljagd \"" + paperchaseList.get(info.position).getName() + "\" wirklich gelöscht werden?")
                     .setCancelable(false)
@@ -123,24 +123,28 @@ public class PaperchaseMainActivity extends BaseActivity {
                     loadDbData();
                 }
                 else if(requestCode == RESULT_CANCELED){
-                    Toast.makeText(getApplicationContext(), "Schnitzeljagderstellung abgebrochen", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "Schnitzeljagderstellung abgebrochen", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case REQUEST_START:
                 if(resultCode == RESULT_OK){
-                    //Toast.makeText(this, "WAHNSINN!!! DIE SCHNITZELJAGD WURDE ERFOLGREICH GESCHAFFT!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "WAHNSINN! DIE SCHNITZELJAGD WURDE ERFOLGREICH GESCHAFFT!", Toast.LENGTH_SHORT).show();
                 }
                 else if(resultCode == RESULT_CANCELED){
-                    Toast.makeText(this, "Schade, Schnitzeljagd abgebrochen", Toast.LENGTH_SHORT).show();;
+                    //Toast.makeText(this, "Schnitzeljagd abgebrochen", Toast.LENGTH_SHORT).show();;
                 }
                 break;
             case REQUEST_CHANGE:
                 if(resultCode == RESULT_OK){
-                    databaseHandler.updatePaperchase((Paperchase) data.getSerializableExtra("paperchase"), paperchaseList.get(latestEditID).getName());
+                    Paperchase paperchaseTemp = (Paperchase) data.getSerializableExtra("paperchase");
+                    if(!paperchaseTemp.getName().equals(paperchaseList.get(latestEditID).getName())){
+
+                    }
+                    databaseHandler.updatePaperchase(paperchaseTemp, paperchaseList.get(latestEditID).getName());
                     loadDbData();
                 }
                 else if(resultCode == RESULT_CANCELED){
-                    Toast.makeText(this, "Bearbeiten abgebrochen", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "Bearbeiten abgebrochen", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
