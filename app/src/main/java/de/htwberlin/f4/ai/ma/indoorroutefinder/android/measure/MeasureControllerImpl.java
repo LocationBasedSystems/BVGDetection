@@ -64,7 +64,10 @@ import de.htwberlin.f4.ai.ma.indoorroutefinder.MaxPictureActivity;
  *
  * used for measuring the distance / calculate coordinates of nodes
  *
- * Author: Benjamin Kneer
+ * 16.01.2017: Changed nullpoint definition from 'NULLPOINT' string in additional info to (0,0,0) coordinates
+ *
+ * @author Benjamin Kneer
+ * @author Emil Schoenawa (nullpoint flag removed)
  */
 
 public class MeasureControllerImpl implements MeasureController {
@@ -561,9 +564,13 @@ public class MeasureControllerImpl implements MeasureController {
         if (startNode != null) {
             if (checked) {
                 // store nullpoint flag in additional info field
-                startNode.setAdditionalInfo("NULLPOINT");
+                // startNode.setAdditionalInfo("NULLPOINT");
+                // The upper code segment was replaced because nullpoints are defined by their coordinate (0,0,0) rather than a flag
+                startNode.setCoordinates(WKT.coordToStr(new float[]{0f, 0f, 0f}));
             } else {
-                startNode.setAdditionalInfo("");
+                // startNode.setAdditionalInfo("");
+                // The upper code segment was replaced because nullpoints are defined by their coordinate (0,0,0) rather than a flag
+                startNode.setCoordinates("");
             }
             databaseHandler.updateNode(startNode, startNode.getId());
         }
@@ -759,10 +766,15 @@ public class MeasureControllerImpl implements MeasureController {
             // and enable measurement start
             boolean different = checkNodesDifferent(start, target);
             if (different) {
+                // TODO Allow measurement between nullpoints (decide for one and update coords of the other, as well as all its connected nodes)
                 // make sure that both nodes aren't nullpoints, because its not allowed to measure between two nullpoints
+                /*
                 if ((start.getAdditionalInfo().contains("NULLPOINT") && !target.getAdditionalInfo().contains("NULLPOINT")) ||
                         (!start.getAdditionalInfo().contains("NULLPOINT") && target.getAdditionalInfo().contains("NULLPOINT")) ||
                         (!start.getAdditionalInfo().contains("NULLPOINT") && !target.getAdditionalInfo().contains("NULLPOINT"))) {
+                        */
+                // The upper code segment was replaced because nullpoints are defined by their coordinate (0,0,0) rather than a flag
+                if (!(WKT.strToCoord(start.getCoordinates()) == new float[]{0f, 0f, 0f}) || !(WKT.strToCoord(target.getCoordinates()) == new float[]{0f, 0f, 0f})) {
                     view.enableStart();
 
                     DatabaseHandler databaseHandler = DatabaseHandlerFactory.getInstance(view.getContext());
