@@ -29,6 +29,8 @@ import de.htwberlin.f4.ai.ma.indoorroutefinder.dijkstra.DijkstraNode;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.fingerprint.AsyncResponse;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.fingerprint.Fingerprint;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.fingerprint.FingerprintTask;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.gps.node.GlobalNode;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.gps.node.GlobalNodeFactory;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.location.location_calculator.LocationCalculator;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.location.location_calculator.LocationCalculatorFactory;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.listeners.LocationChangeListener;
@@ -57,9 +59,12 @@ public class CombinedLocator implements Locator, LocationListener, AsyncResponse
     private Runnable fingerprintRepeater;
     private WifiManager wifiManager;
 
+    //TODO put these in config
     private static final int WIFI_FINGERPRINT_REPEAT_DELAY = 4000;
     private static final int WIFI_FINGERPRINT_DURATION = 3000;
     private static final long MAXIMUM_LOCATION_AGE_MILLIS = 5000L;
+    //TODO maybe make this dependent on gps accuracy?
+    private static final int GPS_LOCATION_RADIUS_METERS = 40;
 
     CombinedLocator(Context context) {
         this.listeners = new ArrayList<>();
@@ -216,17 +221,7 @@ public class CombinedLocator implements Locator, LocationListener, AsyncResponse
             }
         }
         else {
-            if (this.timestamp != -1) {
-                long deltaT = System.currentTimeMillis() - timestamp;
-        Log.d("processFinish", "Working on result...");
-                if (deltaT > MAXIMUM_LOCATION_AGE_MILLIS) {
-                    fallbackToGPS();
-                }
-                else if (deltaT < 0) {
-                    Log.wtf("CombinedLocator", "Negative deltaT! This shouldn't happen, did the system time change?");
-                    this.timestamp = System.currentTimeMillis();
-                }
-            }
+            fallbackToGPS();
         }
     }
 
@@ -241,11 +236,46 @@ public class CombinedLocator implements Locator, LocationListener, AsyncResponse
 
     private void fallbackToGPS() {
         //TODO Try to set Node based on GPS, remember to update timestamp and notify listeners
-        this.timestamp = -1;
-        boolean notify = this.location != null;
-        this.location = null;
-        if (notify) {
-            notifyListeners(LocationSource.GOOGLE_PLAY_SERVICES_FUSED_LOCATION_API);
+        if (this.gpsLocation != null) {
+            List<Node> allNodes = databaseHandler.getAllNodes();
+            Node result = null;
+            double distance = Double.NaN;
+            for (Node n : allNodes) {
+                GlobalNode temp = GlobalNodeFactory.createInstance(n);
+                if (temp.hasGlobalCoordinates()) {
+                    float[] results = new float[1];
+                    Location.distanceBetween(this.gpsLocation.getLatitude(), this.gpsLocation.getLongitude(), temp.getLatitude(), temp.getLongitude(), results);
+                    if (results[0] <= GPS_LOCATION_RADIUS_METERS) {
+                        if (result == null || distance > results[0]) {
+                            result = n;
+                            distance = results[0];
+                        }
+                    }
+                }
+            }
+            if (result != null) {
+                this.timestamp = System.currentTimeMillis();
+                boolean notify = this.location == null || !this.location.getId().equals(result.getId());
+                this.location = result;
+                if (notify) {
+                    notifyListeners(LocationSource.GOOGLE_PLAY_SERVICES_FUSED_LOCATION_API);
+                }
+                return;
+            }
+        }
+        // No Location found, set location to null, if ttl has run out
+        long deltaT = System.currentTimeMillis() - timestamp;
+        if ((this.timestamp != -1 && deltaT > MAXIMUM_LOCATION_AGE_MILLIS) || this.timestamp == -1) {
+            this.timestamp = -1;
+            boolean notify = this.location != null;
+            this.location = null;
+            if (notify) {
+                notifyListeners(LocationSource.GOOGLE_PLAY_SERVICES_FUSED_LOCATION_API);
+            }
+        }
+        else if (deltaT < 0) {
+            Log.wtf("CombinedLocator", "Negative deltaT! This shouldn't happen, did the system time change?");
+            this.timestamp = System.currentTimeMillis();
         }
     }
 
