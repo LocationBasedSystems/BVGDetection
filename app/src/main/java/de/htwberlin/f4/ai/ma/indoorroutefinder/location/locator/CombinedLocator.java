@@ -199,6 +199,7 @@ public class CombinedLocator implements Locator, LocationListener, AsyncResponse
 
     @Override
     public void onLocationChanged(Location location) {
+        Log.d("CombinedLocator", "Got GPS location!");
         this.gpsLocation = location;
     }
 
@@ -218,6 +219,9 @@ public class CombinedLocator implements Locator, LocationListener, AsyncResponse
                     }
                     this.timestamp = System.currentTimeMillis();
                 }
+            }
+            else {
+                fallbackToGPS();
             }
         }
         else {
@@ -257,11 +261,18 @@ public class CombinedLocator implements Locator, LocationListener, AsyncResponse
                 this.timestamp = System.currentTimeMillis();
                 boolean notify = this.location == null || !this.location.getId().equals(result.getId());
                 this.location = result;
+                Log.d("CombinedLocator", "Notify: " + notify + "; Location: " + this.location.getId());
                 if (notify) {
                     notifyListeners(LocationSource.GOOGLE_PLAY_SERVICES_FUSED_LOCATION_API);
                 }
                 return;
             }
+            else {
+                Log.d("CombinedLocator", "No location within " + GPS_LOCATION_RADIUS_METERS + "m found in Nodelist!");
+            }
+        }
+        else {
+            Log.d("CombinedLocator", "No GPS location!");
         }
         // No Location found, set location to null, if ttl has run out
         long deltaT = System.currentTimeMillis() - timestamp;
