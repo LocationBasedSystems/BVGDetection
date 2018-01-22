@@ -86,15 +86,20 @@ public class PlayPaperchaseActivity extends AppCompatActivity implements Locatio
     @Override
     protected void onPause() {
         super.onPause();
-        locator.unregisterLocationListener(this);
         locator.stopLocationUpdates();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        locator.registerLocationListener(this);
         locator.startLocationUpdates();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        locator.unregisterLocationListener(this);
+        locator.stopLocationUpdates();
     }
 
 
@@ -111,8 +116,7 @@ public class PlayPaperchaseActivity extends AppCompatActivity implements Locatio
         currentNodeText.setText("Current: " + locator.getLastLocation().getId() + "  (Ziel: " + paperchase.getClueList().get(currentClueId+1).getLoc().getId()+")");
         hintText.setText(paperchase.getClueList().get(currentClueId).getClueText());
 
-        try { //This part blurs the image
-            //Log.d("PICTUREPATH---------", paperchase.getClueList().get(currentClueId).getHintPicturePath());
+        try { //This part blurs the image, if it exists
             if (paperchase.getClueList().get(currentClueId).getHintPicturePath() != null && !paperchase.getClueList().get(currentClueId).getHintPicturePath().equals("")) {
                 Log.d("PICTUREPATH---------", paperchase.getClueList().get(currentClueId).getHintPicturePath());
                 Bitmap image = BitmapFactory.decodeFile(paperchase.getClueList().get(currentClueId).getHintPicturePath());

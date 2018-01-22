@@ -35,6 +35,7 @@ import de.htwberlin.f4.ai.ma.indoorroutefinder.location.location_calculator.Loca
 import de.htwberlin.f4.ai.ma.indoorroutefinder.location.location_calculator.LocationCalculatorFactory;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.listeners.LocationChangeListener;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.node.Node;
+import de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.PlayPaperchaseActivity;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandler;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandlerFactory;
 
@@ -229,12 +230,19 @@ public class CombinedLocator implements Locator, LocationListener, AsyncResponse
         }
     }
 
-    private synchronized void notifyListeners(LocationSource source) {
+    private synchronized void notifyListeners(final LocationSource source) {
         if (location!=null) {
             //Toast.makeText(this.context, "LocUpdate :" + this.location.getId(), Toast.LENGTH_SHORT).show();
         }
         for (LocationChangeListener listener : this.listeners) {
-            listener.onLocationChanged(this.location, source);
+            final LocationChangeListener tempListener = listener;
+            new Thread(new Runnable() {
+                public void run() {
+                    tempListener.onLocationChanged(CombinedLocator.this.location, source);
+                }
+            }).start();
+
+
         }
     }
 

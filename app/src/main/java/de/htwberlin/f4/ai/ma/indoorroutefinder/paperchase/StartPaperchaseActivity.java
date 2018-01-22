@@ -97,8 +97,6 @@ public class StartPaperchaseActivity extends AppCompatActivity implements Locati
                     locator.unregisterLocationListener(StartPaperchaseActivity.this);
                     locator.stopLocationUpdates();
                     startActivityForResult(intent, REQUEST_NAV);
-                    //Toast.makeText(StartPaperchaseActivity.this, "Not yet implemented", Toast.LENGTH_SHORT).show();
-                    //TODO routefinder with custom nodes selected
                 }
             });
             beginButton.setOnClickListener(new View.OnClickListener() {
@@ -138,6 +136,19 @@ public class StartPaperchaseActivity extends AppCompatActivity implements Locati
             }
 
         }
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        locator.stopLocationUpdates();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        locator.startLocationUpdates();
     }
 
     @Override

@@ -2,9 +2,16 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android" >
     <item
+        android:orderInCategory="100"
+        android:title="sort"
+        android:id="@+id/action_sort"
+        android:visible="false"
+        android:icon="@drawable/ic_sort_black_48dp"
+        app:showAsAction="always" />
+    <item
         android:title="done"
         android:id="@+id/action_cart"
         android:icon="@drawable/ic_done_black_48dp"
-        android:orderInCategory="100"
+        android:orderInCategory="101"
         app:showAsAction="always" />
 </menu>

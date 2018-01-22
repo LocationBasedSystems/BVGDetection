@@ -41,7 +41,7 @@ import de.htwberlin.f4.ai.ma.indoorroutefinder.node.Node;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandler;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandlerFactory;
 
-public class AddCluesActivity extends AppCompatActivity {
+public class AddCluesActivity extends AppCompatActivity implements LocationChangeListener{
 
     private ListView listView;
     ImageView checkImage;
@@ -51,6 +51,10 @@ public class AddCluesActivity extends AppCompatActivity {
     ArrayList<Node> checkedNodesList;
     DatabaseHandler databaseHandler;
     ArrayAdapter<Node> arrayAdapter;
+    Locator locator;
+    Node lastLocation;
+    boolean sorted = false;
+    private MenuItem menuSort;
 
 
     @Override
@@ -62,13 +66,16 @@ public class AddCluesActivity extends AppCompatActivity {
         checkImage = (ImageView) findViewById(R.id.add_clues_item_checkimage);
         search = (TextInputEditText) findViewById(R.id.add_clues_search);
         databaseHandler = DatabaseHandlerFactory.getInstance(this);
+        locator = LocatorFactory.getInstance(getApplicationContext());
+
+
         nodeList = new ArrayList<>();
         allNodesList = new ArrayList<>();
         checkedNodesList = new ArrayList<>();
         nodeList.addAll(databaseHandler.getAllNodes());
         allNodesList.addAll(databaseHandler.getAllNodes());
 
-        arrayAdapter = new ClueAdapter(this, R.layout.add_from_all_clues_list_item, nodeList); //TODO custom item adapter
+        arrayAdapter = new ClueAdapter(this, R.layout.add_from_all_clues_list_item, nodeList);
         listView.setAdapter(arrayAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -87,9 +94,7 @@ public class AddCluesActivity extends AppCompatActivity {
         });
         search.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {            }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -106,11 +111,28 @@ public class AddCluesActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
+            public void afterTextChanged(Editable editable) {            }
         });
 
+        //menuSort = (MenuItem) findViewById(R.id.action_sort);
+    }
+
+    @Override
+    public void onLocationChanged(Node newLocation, LocationSource source) {
+        if(newLocation!=null) {
+            lastLocation = newLocation;
+            locator.stopLocationUpdates();
+            locator.unregisterLocationListener(this);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(!menuSort.isVisible()) {
+                        menuSort.setVisible(true);
+                    }
+                }
+            });
+
+        }
     }
 
     private class ClueAdapter extends ArrayAdapter<Node>{
@@ -159,6 +181,9 @@ public class AddCluesActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_add_clues, menu);
+        menuSort = menu.findItem(R.id.action_sort);
+        locator.registerLocationListener(this);
+        locator.startLocationUpdates();
         return true;
     }
 
@@ -180,6 +205,26 @@ public class AddCluesActivity extends AppCompatActivity {
                 }
                 finish();
                 return true;
+            case R.id.action_sort:
+                if(lastLocation != null) {
+                    if (sorted) {
+                        nodeList.clear();
+                        nodeList.addAll(databaseHandler.getAllNodes());
+                        arrayAdapter.notifyDataSetChanged();
+                        sorted = false;
+                    } else {
+                        List<Node> tempList = locator.sortByDistanceNearestFirst(lastLocation, nodeList);
+                        nodeList.clear();
+                        nodeList.addAll(tempList);
+                        arrayAdapter.notifyDataSetChanged();
+                        sorted = true;
+                    }
+                }
+                else{
+                    Toast.makeText(this, "no location yet", Toast.LENGTH_SHORT).show();
+                }
+
+                return true;
             case android.R.id.home:
                 setResult(RESULT_CANCELED, intent);
                 finish();
@@ -194,5 +239,24 @@ public class AddCluesActivity extends AppCompatActivity {
         Intent intent = new Intent();
         setResult(RESULT_CANCELED, intent);
         finish();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        locator.stopLocationUpdates();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        locator.startLocationUpdates();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        locator.unregisterLocationListener(this);
+        locator.stopLocationUpdates();
     }
 }
