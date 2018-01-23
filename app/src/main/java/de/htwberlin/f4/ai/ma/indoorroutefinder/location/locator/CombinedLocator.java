@@ -35,7 +35,6 @@ import de.htwberlin.f4.ai.ma.indoorroutefinder.location.location_calculator.Loca
 import de.htwberlin.f4.ai.ma.indoorroutefinder.location.location_calculator.LocationCalculatorFactory;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.location.locator.listeners.LocationChangeListener;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.node.Node;
-import de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.PlayPaperchaseActivity;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandler;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandlerFactory;
 

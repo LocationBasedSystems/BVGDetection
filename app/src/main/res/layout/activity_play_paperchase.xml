@@ -23,12 +23,7 @@
         android:textSize="15dp"
         android:textColor="@android:color/black"
         android:gravity="center"
-        android:text="blablabla ajsd jaspo jiduasojdolwiaj dohjawoiwkdj howaj dojawkslkdnj olwadiawh doaw
-        awddhowliajdolpaswijdpolwiajdpkjwapjdpwajd pwjad pjaws.lkidnjawolijd poaw jnoliawjdolaj dlaw-d---
-        dwajn bdolwahjdn lawjdm pjwaikd uhbakijdzgbvsjhdb awhndb ikaw dkiuahnn dsjkndwahb msndjwhabd masbdikjwa
-        wadb aikshnd kawndkjhabw d kiuwbadiku bhawkd bysmnndbawoi nedasdbhwk absdkiubub wdlbads
-        jb wa kdhnwak bdkjawbd kiawbhd kawbdk,alödjkiahndkwb akj sdbikowab daw dbkwa nbdwbnd lkoaw bdwal
-        wdk lhwak dhbwabdh kawbaklsdjkwaolhbda kjbwdkw kujawbdk awnbdkl,awnndöa sdowadkbsdkAK a asodo a"
+        android:text="ein hinweis"
         android:layout_below="@id/play_paperchase_hint_title_text"
         android:scrollbars="vertical"
         android:padding="8dp"

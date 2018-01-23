@@ -36,4 +36,19 @@
         >
 
     </android.support.design.widget.FloatingActionButton>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="65dp"
+        android:paddingTop="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:background="@drawable/info_box"
+        android:textAlignment="center"
+        android:text="@string/paperchase_main_hint_to_help_text"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/paperchase_main_hint_to_help" />
 </RelativeLayout>

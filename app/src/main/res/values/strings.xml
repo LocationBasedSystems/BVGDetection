@@ -171,6 +171,7 @@
     <string name="add_clues_search_nodes">Orte suchen</string>
     <string name="back_to_paperchase">Zurück zur Schnitzeljagd</string>
     <string name="finished_back_button_text"><b>Zurück zur Schnitzeljagdauswahl</b></string>
+    <string name="paperchase_main_hint_to_help_text">Tippe auf eine Schnitzeljagd um sie zu spielen   oder auf das \'+\' um eine neue zu erstellen.</string>
 
 
 </resources>

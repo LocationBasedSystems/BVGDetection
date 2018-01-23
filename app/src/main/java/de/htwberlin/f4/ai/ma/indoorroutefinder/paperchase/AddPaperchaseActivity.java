@@ -49,10 +49,12 @@ public class AddPaperchaseActivity extends AppCompatActivity implements  Recycle
     private ItemAdapter listAdapter;
     private FloatingActionButton fab;
     private MySwipeRefreshLayout refreshLayout;
+    private static final int CLUE_REQUEST = 1;
     private static final int CAM_REQUEST = 2;
     private int clueWithPhotoPos = 0;
     private File sdCard = Environment.getExternalStorageDirectory();
     private Timestamp timestamp;
+    TextView emptyView;
 
 
     @Override
@@ -120,6 +122,10 @@ public class AddPaperchaseActivity extends AppCompatActivity implements  Recycle
         listAdapter = new ItemAdapter(paperchase.getClueList(), R.layout.clue_list_item, R.id.clue_list_item_root, true,this);
         dragListView.setAdapter(listAdapter,false);
         dragListView.setCanDragHorizontally(false);
+        emptyView = (TextView) findViewById(R.id.add_paperchase_empty_view);
+        if(paperchase.getClueList().size() <1){
+            emptyView.setVisibility(View.VISIBLE);
+        }
 
 
     }
@@ -232,11 +238,8 @@ public class AddPaperchaseActivity extends AppCompatActivity implements  Recycle
                     intent.putExtra("paperchase", paperchase);
                     setResult(RESULT_OK, intent);
                     finish();
-                    return true;
                 }
-                else{
-                    return false;
-                }
+                return true;
             case android.R.id.home:
                 new AlertDialog.Builder(this)
                         .setMessage("Soll die Schnitzeljagderstellung wirklich abgebrochen werden?")
@@ -262,12 +265,12 @@ public class AddPaperchaseActivity extends AppCompatActivity implements  Recycle
 
     public void fabClicked(View view) {
         final Intent intent = new Intent(this, AddCluesActivity.class);
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, CLUE_REQUEST);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == 1){
+        if(requestCode == CLUE_REQUEST){
             switch (resultCode){
                 case RESULT_OK:
                     Bundle clueBundle = data.getBundleExtra("clues");
@@ -277,6 +280,10 @@ public class AddPaperchaseActivity extends AppCompatActivity implements  Recycle
                         paperchase.addClue(clue);
                         listAdapter.notifyDataSetChanged();
                     }
+                    if(paperchase.getClueList().size() > 0){
+                        emptyView.setVisibility(View.GONE);
+                    }
+                    break;
                 case RESULT_CANCELED:
             }
         }
@@ -289,6 +296,7 @@ public class AddPaperchaseActivity extends AppCompatActivity implements  Recycle
                     paperchase.getClueList().get(clueWithPhotoPos).setHintPicturePath(sdCard.getAbsolutePath() + "/IndoorPositioning/Pictures/" + fileName + "_" + realTimestamp + ".jpg");
                     listAdapter.notifyDataSetChanged();
                     Log.d("File created-----------", paperchase.getClueList().get(clueWithPhotoPos).getHintPicturePath());
+                    break;
             }
         }
     }
