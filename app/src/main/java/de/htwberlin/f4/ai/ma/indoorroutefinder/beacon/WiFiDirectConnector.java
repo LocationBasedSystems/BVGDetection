@@ -164,6 +164,8 @@ public class WiFiDirectConnector {
 
                             deviceList.clear();
                             deviceList.addAll(peers.getDeviceList());
+
+                            checkList();
                         }
                     });
         }
@@ -181,6 +183,7 @@ public class WiFiDirectConnector {
             // Check if we're connected
             Log.d(TAG, networkInfo.toString());
             if (networkInfo.isConnected()) {
+                context.unregisterReceiver(peerDiscoveryReceiver);
                 Log.d(TAG, "network connected");
                 wifiP2pManager.requestConnectionInfo(wifiDirectChannel,
                         new WifiP2pManager.ConnectionInfoListener() {
@@ -192,9 +195,11 @@ public class WiFiDirectConnector {
                                     if (info.isGroupOwner) {
                                         // TODO Initiate server socket.
 
-                                        checkList();
+                                        //checkList();
 
                                         showUserMessage("is GO");
+                                        wifiP2pManager.stopPeerDiscovery(wifiDirectChannel,actionListener);
+
                                         while(servIp.equals("")) {
                                             try {
                                                 BufferedReader br = new BufferedReader(new FileReader(new File("/proc/net/arp")));
@@ -214,6 +219,7 @@ public class WiFiDirectConnector {
                                         }
                                         Log.d(TAG, servIp);
                                         new ConnectTask().execute(servIp);
+
                                     }
                                     // If we're the client
                                     else{

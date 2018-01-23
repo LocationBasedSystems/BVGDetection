@@ -15,6 +15,8 @@ import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandlerFactor
 
 public class BeaconMainActivity extends BaseActivity {
 
+    WiFiDirectConnector wifiConn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,13 +24,14 @@ public class BeaconMainActivity extends BaseActivity {
         getLayoutInflater().inflate(R.layout.activity_beacon_main, contentFrameLayout);
         setTitle("Beacon ");
 
+        wifiConn = new WiFiDirectConnector(getApplicationContext());
+        wifiConn.initializeWiFiDirect();
+
         final Button buttonSend = (Button)findViewById(R.id.beacon_send_data);
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                //wifiConn.sendMessage(tmp);
+                wifiConn.sendMessage(PROTOKOLL.cs_dataBegin + "indoor_data.db");
             }
         });
 
@@ -36,7 +39,15 @@ public class BeaconMainActivity extends BaseActivity {
         buttonReceive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                wifiConn.sendMessage(PROTOKOLL.cs_dataRequest + "indoor_data.db");
+            }
+        });
 
+        final Button buttonAdmin = (Button)findViewById(R.id.beacon_request_admin);
+        buttonAdmin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                wifiConn.sendMessage(PROTOKOLL.cs_addAdmin);
             }
         });
 
@@ -45,13 +56,15 @@ public class BeaconMainActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-
+                    wifiConn.discoverPeers();
                     buttonSend.setEnabled(true);
                     buttonReceive.setEnabled(true);
+                    buttonAdmin.setEnabled(true);
                 }
                 else{
                     buttonSend.setEnabled(false);
                     buttonReceive.setEnabled(false);
+                    buttonAdmin.setEnabled(false);
                 }
             }
         });

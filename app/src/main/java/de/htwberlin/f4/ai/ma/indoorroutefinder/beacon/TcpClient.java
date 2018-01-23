@@ -71,8 +71,8 @@ public class TcpClient {
 
                 if (message.startsWith(PROTOKOLL.cs_dataBegin)) {
                     String[] dates = message.split(":", 2);
-                    File sdcard = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                    File f = new File(sdcard, dates[1]);
+                    File sdcard = Environment.getExternalStorageDirectory();
+                    File f = new File(sdcard, "IndoorPositioning/Exported/" + dates[1]);
                     DataInputStream in = null;
                     try {
                         in = new DataInputStream(new FileInputStream(f));
@@ -90,7 +90,7 @@ public class TcpClient {
                     System.out.println("CH:" + challengeString);
                     try {
                         File sdcar = Environment.getExternalStorageDirectory();
-                        File fKey = new File(sdcar, "privkey");
+                        File fKey = new File(sdcar, "BeaconPiPrivKey");
                         fKey.createNewFile();
                         FileInputStream keyfis = new FileInputStream(fKey);
                         byte[] encKey = new byte[keyfis.available()];
@@ -217,7 +217,7 @@ public class TcpClient {
                             socket.getInputStream().read(tmp);
                             //System.out.println("Der recKey ist lang: "+tmp.length);
                             File sdcard = Environment.getExternalStorageDirectory();
-                            File f = new File(sdcard, "privkey");
+                            File f = new File(sdcard, "BeaconPiPrivKey");
                             f.createNewFile();
                             FileOutputStream fo = new FileOutputStream(f);
                             fo.write(tmp);
@@ -241,9 +241,9 @@ public class TcpClient {
                             int dataLength = Integer.parseInt(dates[1]);
                             int readBytes = 0;
                             int remainingBytes = dataLength - readBytes;
-                            File sdcard = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS.concat("/beaconData"));
-                            sdcard.mkdir();
-                            File f = new File(sdcard, dates[2]);
+                            File sdcard = Environment.getExternalStorageDirectory();
+                            //sdcard.mkdir();
+                            File f = new File(sdcard, "IndoorPositioning/Exported/" + dates[2]);
                             f.createNewFile();
                             FileOutputStream fo = new FileOutputStream(f);
 
@@ -261,7 +261,7 @@ public class TcpClient {
                                         outArr[i] = arr[i];
                                     }
 
-                                    System.out.println("SoViel: " + soViel);
+                                    System.out.println("Uebertragen: " + soViel);
                                     readBytes += soViel;
 
                                     datgroe += outArr.length;
