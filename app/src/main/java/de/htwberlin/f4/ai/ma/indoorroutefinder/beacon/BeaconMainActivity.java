@@ -45,6 +45,7 @@ public class BeaconMainActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
+
                     buttonSend.setEnabled(true);
                     buttonReceive.setEnabled(true);
                 }
