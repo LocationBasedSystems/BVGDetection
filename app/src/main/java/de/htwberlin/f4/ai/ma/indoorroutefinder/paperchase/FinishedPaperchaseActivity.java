@@ -24,7 +24,7 @@ public class FinishedPaperchaseActivity extends AppCompatActivity {
         endButton = (Button) findViewById(R.id.finished_end_button);
         timeText = (TextView) findViewById(R.id.paperchase_finished_time);
         endText = (TextView) findViewById(R.id.paperchase_finished_message);
-        timeText.setText("Die Schnitzeljagd hat " + getIntent().getLongExtra("time",0) + " ms gedauert!");
+        timeText.setText("Die Schnitzeljagd hat " + (getIntent().getLongExtra("time",0) /1000.0) + " s gedauert!");
         endText.setText(getIntent().getStringExtra("text"));
         endButton.setOnClickListener(new View.OnClickListener() {
             @Override

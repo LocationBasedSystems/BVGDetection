@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -123,7 +124,7 @@ public class RouteFinderActivity extends BaseActivity implements AsyncResponse {
             backToPaperchaseButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    setResult(RESULT_CANCELED);
+                    setResult(RESULT_OK);
                     finish();
                 }
             });
@@ -186,19 +187,6 @@ public class RouteFinderActivity extends BaseActivity implements AsyncResponse {
                     }
                 });
             }
-
-        //TODO automatisch route finden
-
-
-
-
-
-
-
-
-
-
-
 
         }
         else {

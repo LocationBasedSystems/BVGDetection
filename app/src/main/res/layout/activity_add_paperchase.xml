@@ -50,7 +50,8 @@
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/add_paperchase_description_layout">
+        android:layout_below="@id/add_paperchase_description_layout"
+        android:layout_above="@id/add_paperchase_hint_to_help">
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">

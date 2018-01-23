@@ -126,7 +126,7 @@ public class StartPaperchaseActivity extends AppCompatActivity implements Locati
         }
         else if(requestCode == REQUEST_NAV){
             if(resultCode == RESULT_CANCELED){
-                Toast.makeText(this, "already there", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Keine Route gefunden", Toast.LENGTH_SHORT).show();
                 locator.registerLocationListener(this);
                 locator.startLocationUpdates();
             }
@@ -173,6 +173,7 @@ public class StartPaperchaseActivity extends AppCompatActivity implements Locati
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    Toast.makeText(StartPaperchaseActivity.this, "Aktuelle Position: " + newLocation.getId(), Toast.LENGTH_SHORT).show();
                     navigateButton.setEnabled(true);
                     oldLocId=newLocation.getId();
                     if (newLocation.getId().equals(paperchase.getClueList().get(0).getLoc().getId())) {
