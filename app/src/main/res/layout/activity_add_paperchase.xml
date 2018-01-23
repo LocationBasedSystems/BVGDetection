@@ -59,7 +59,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/add_paperchase_empty_view"
-                android:text="Auf '+' drücken, um Orte für Hinweise hinzuzufügen."
+                android:text="@string/add_paperchase_empty_list_text"
+                android:layout_margin="10dp"
                 android:visibility="gone"/>
 
             <com.woxthebox.draglistview.DragListView
@@ -75,24 +76,26 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="5dp"
         android:onClick="fabClicked"
         android:src="@android:drawable/ic_input_add"
         android:tint="@android:color/white"
         app:backgroundTint="@color/colorAccent" />
 
     <TextView
+        android:id="@+id/add_paperchase_hint_to_help"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="65dp"
-        android:paddingTop="10dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:background="@drawable/info_box"
-        android:textAlignment="center"
-        android:text="Langes drücken auf einen Ort, ermöglicht verschieben zum festlegegen der Reihenfolge."
+        android:layout_height="65dp"
         android:layout_alignParentBottom="true"
-        android:id="@+id/add_paperchase_hint_to_help" />
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="65dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/info_box"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:textSize="14dp"
+        android:text="Langes drücken auf einen Ort ermöglicht verschieben zum festlegegen der Reihenfolge."
+        android:textAlignment="center" />
 </RelativeLayout>

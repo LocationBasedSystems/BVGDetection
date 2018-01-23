@@ -172,6 +172,7 @@
     <string name="back_to_paperchase">Zurück zur Schnitzeljagd</string>
     <string name="finished_back_button_text"><b>Zurück zur Schnitzeljagdauswahl</b></string>
     <string name="paperchase_main_hint_to_help_text">Tippe auf eine Schnitzeljagd um sie zu spielen   oder auf das \'+\' um eine neue zu erstellen.</string>
+    <string name="add_paperchase_empty_list_text">Auf \'+\' drücken, um Orte für Hinweise hinzuzufügen.</string>
 
 
 </resources>
