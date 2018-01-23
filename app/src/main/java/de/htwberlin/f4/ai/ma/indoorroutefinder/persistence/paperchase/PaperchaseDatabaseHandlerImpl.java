@@ -32,14 +32,14 @@ public class PaperchaseDatabaseHandlerImpl extends SQLiteOpenHelper implements P
     private static final String PAPERCHASES_TABLE = "paperchases";
     private static final String CLUES_TABLE = "clues";
 
-    private static final String PAPERCHASE_NAME = "name"; //PK
+    private static final String PAPERCHASE_NAME = "name";
     private static final String PAPERCHASE_DESCRIPTION = "description";
 
-    private static final String CLUE_ID = "id"; //PK
+    private static final String CLUE_ID = "id";
     private static final String CLUE_INDEX = "position";
     private static final String CLUE_HINT = "hint";
-    private static final String CLUE_PAPERCHASE = "paperchase"; //FK
-    private static final String CLUE_NODE = "node"; //FK
+    private static final String CLUE_PAPERCHASE = "paperchase";
+    private static final String CLUE_NODE = "node";
     private static final String CLUE_PICTURE = "picture";
 
     private Context context;
