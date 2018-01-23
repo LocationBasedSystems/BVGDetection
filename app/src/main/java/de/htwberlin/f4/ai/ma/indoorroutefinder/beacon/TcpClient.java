@@ -117,6 +117,11 @@ public class TcpClient {
 
                     send(challengeString + ":" + signature.length);
                     try {
+                        String tmpo = "";
+                        for (byte b: signature) {
+                            tmpo += b;
+                        }
+                        Log.d("TCPClient", tmpo );
                         socket.getOutputStream().write(signature);
                         socket.getOutputStream().flush();
                     } catch (IOException e) {
