@@ -9,11 +9,11 @@
     tools:context="de.htwberlin.f4.ai.ma.indoorroutefinder.paperchase.PaperchaseMainActivity">
 
     <ListView
+        android:id="@+id/paperchase_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/paperchase_list"
-        >
-    </ListView>
+        android:layout_above="@+id/paperchase_main_hint_to_help"
+        android:layout_alignParentStart="true"></ListView>
 
     <TextView
         android:id="@+id/paperchase_list_empty"
@@ -29,7 +29,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="5dp"
         android:onClick="fabClicked"
         android:src="@android:drawable/ic_input_add"
         android:tint="@android:color/white"
@@ -39,16 +40,17 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="55dp"
+        android:layout_height="65dp"
         android:layout_marginBottom="20dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="65dp"
-        android:paddingTop="10dp"
+        android:paddingTop="5dp"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:background="@drawable/info_box"
         android:textAlignment="center"
         android:text="@string/paperchase_main_hint_to_help_text"
+        android:textSize="14dp"
         android:layout_alignParentBottom="true"
         android:id="@+id/paperchase_main_hint_to_help" />
 </RelativeLayout>
