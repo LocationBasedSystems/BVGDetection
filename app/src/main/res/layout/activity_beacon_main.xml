@@ -49,6 +49,16 @@
         android:layout_marginLeft="20dp"
         android:text="Daten Senden" />
 
+    <Button
+        android:id="@+id/beacon_request_admin"
+        android:enabled="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/beacon_send_data"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:text="Admin Key anfragen" />
+
     <TextView
         android:id="@+id/beacon_message_dump"
         android:layout_width="match_parent"
