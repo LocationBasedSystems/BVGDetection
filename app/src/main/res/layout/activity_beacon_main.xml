@@ -1,9 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="de.htwberlin.f4.ai.ma.indoorroutefinder.beacon.BeaconMainActivity">
 
-</android.support.constraint.ConstraintLayout>
+
+    <Switch
+        android:id="@+id/beacon_enable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:textSize="16dp"
+        android:text="Beacon einschalten" />
+
+    <TextView
+        android:id="@+id/beacon_status_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/beacon_enable"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:textSize="18dp"
+        android:text="Kein Beacon verbunden" />
+
+    <Button
+        android:id="@+id/beacon_receive_data"
+        android:enabled="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/beacon_status_text"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:text="Daten Anfragen" />
+
+    <Button
+        android:id="@+id/beacon_send_data"
+        android:enabled="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/beacon_receive_data"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:text="Daten Senden" />
+
+    <TextView
+        android:id="@+id/beacon_message_dump"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="20dp"
+        android:text="TextView" />
+</RelativeLayout>
