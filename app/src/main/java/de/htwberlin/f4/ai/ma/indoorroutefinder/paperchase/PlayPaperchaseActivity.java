@@ -102,6 +102,12 @@ public class PlayPaperchaseActivity extends AppCompatActivity implements Locatio
         locator.stopLocationUpdates();
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        locator.registerLocationListener(this);
+        locator.startLocationUpdates();
+    }
 
     @Override
     public void onBackPressed() {
@@ -149,22 +155,17 @@ public class PlayPaperchaseActivity extends AppCompatActivity implements Locatio
 
     @Override
     public void onLocationChanged(final Node newLocation, LocationSource source) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(currentClueId+1 < paperchase.getClueList().size()) {
-                    currentNodeText.setText("Current: " + newLocation.getId() + "  (Ziel: " + paperchase.getClueList().get(currentClueId + 1).getLoc().getId() + ")");
-                }
-                if(newLocation!=null) {
-                    if(currentClueId+1 < paperchase.getClueList().size()) {
-                        currentNodeText.setText("Current: " + newLocation.getId() + "  (Ziel: " + paperchase.getClueList().get(currentClueId + 1).getLoc().getId() + ")");
-                        if (newLocation.getId().equals(paperchase.getClueList().get(currentClueId + 1).getLoc().getId())) {
-                            next(false);
-                        }
-                    }
+        if(currentClueId+1 < paperchase.getClueList().size()) {
+            currentNodeText.setText("Current: " + newLocation.getId() + "  (Ziel: " + paperchase.getClueList().get(currentClueId + 1).getLoc().getId() + ")");
+        }
+        if(newLocation!=null) {
+            if(currentClueId+1 < paperchase.getClueList().size()) {
+                currentNodeText.setText("Current: " + newLocation.getId() + "  (Ziel: " + paperchase.getClueList().get(currentClueId + 1).getLoc().getId() + ")");
+                if (newLocation.getId().equals(paperchase.getClueList().get(currentClueId + 1).getLoc().getId())) {
+                    next(false);
                 }
             }
-        });
+        }
 
     }
 
@@ -177,17 +178,13 @@ public class PlayPaperchaseActivity extends AppCompatActivity implements Locatio
             v.vibrate(500);
             if(debug) {
                 onLocationChanged(locator.getLastLocation(), null);
-        }
+            }
         } else if (currentClueId + 2 == paperchase.getClueList().size()) {
             long millis = System.currentTimeMillis() - millisAtStart;
             Intent intent = new Intent(getApplicationContext(), FinishedPaperchaseActivity.class);
             intent.putExtra("time", millis);
             intent.putExtra("text", paperchase.getClueList().get(currentClueId + 1).getClueText());
-            new Thread(new Runnable() {
-                public void run() {
-                    locator.unregisterLocationListener(PlayPaperchaseActivity.this);
-                }
-            }).start();
+            locator.unregisterLocationListener(PlayPaperchaseActivity.this);
             locator.stopLocationUpdates();
             Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
             // Vibrate for 500 milliseconds
@@ -198,11 +195,7 @@ public class PlayPaperchaseActivity extends AppCompatActivity implements Locatio
             finish();
         } else {
             setResult(RESULT_CANCELED);
-            new Thread(new Runnable() {
-                public void run() {
-                    locator.unregisterLocationListener(PlayPaperchaseActivity.this);
-                }
-            }).start();
+            locator.unregisterLocationListener(PlayPaperchaseActivity.this);
             locator.stopLocationUpdates();
             finish();
         }

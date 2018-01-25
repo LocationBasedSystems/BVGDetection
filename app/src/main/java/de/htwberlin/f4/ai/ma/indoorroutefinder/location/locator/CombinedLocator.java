@@ -229,19 +229,28 @@ public class CombinedLocator implements Locator, LocationListener, AsyncResponse
         }
     }
 
-    private synchronized void notifyListeners(final LocationSource source) {
+    private void notifyListeners(final LocationSource source) {
         if (location!=null) {
             //Toast.makeText(this.context, "LocUpdate :" + this.location.getId(), Toast.LENGTH_SHORT).show();
         }
+        ArrayList<LocationChangeListener> listenersToNotify = new ArrayList<>();
+        /*
         for (LocationChangeListener listener : this.listeners) {
+            /*
             final LocationChangeListener tempListener = listener;
             new Thread(new Runnable() {
                 public void run() {
                     tempListener.onLocationChanged(CombinedLocator.this.location, source);
                 }
             }).start();
+        }
+        */
+        synchronized (this) {
+            listenersToNotify.addAll(this.listeners);
+        }
 
-
+        for (LocationChangeListener listener : listenersToNotify) {
+            listener.onLocationChanged(CombinedLocator.this.location, source);
         }
     }
 
