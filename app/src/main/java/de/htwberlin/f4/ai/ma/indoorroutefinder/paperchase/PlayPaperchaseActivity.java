@@ -148,18 +148,24 @@ public class PlayPaperchaseActivity extends AppCompatActivity implements Locatio
     }
 
     @Override
-    public void onLocationChanged(Node newLocation, LocationSource source) {
-        if(currentClueId+1 < paperchase.getClueList().size()) {
-            currentNodeText.setText("Current: " + newLocation.getId() + "  (Ziel: " + paperchase.getClueList().get(currentClueId + 1).getLoc().getId() + ")");
-        }
-        if(newLocation!=null) {
-            if(currentClueId+1 < paperchase.getClueList().size()) {
-                currentNodeText.setText("Current: " + newLocation.getId() + "  (Ziel: " + paperchase.getClueList().get(currentClueId + 1).getLoc().getId() + ")");
-                if (newLocation.getId().equals(paperchase.getClueList().get(currentClueId + 1).getLoc().getId())) {
-                    next(false);
+    public void onLocationChanged(final Node newLocation, LocationSource source) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(currentClueId+1 < paperchase.getClueList().size()) {
+                    currentNodeText.setText("Current: " + newLocation.getId() + "  (Ziel: " + paperchase.getClueList().get(currentClueId + 1).getLoc().getId() + ")");
+                }
+                if(newLocation!=null) {
+                    if(currentClueId+1 < paperchase.getClueList().size()) {
+                        currentNodeText.setText("Current: " + newLocation.getId() + "  (Ziel: " + paperchase.getClueList().get(currentClueId + 1).getLoc().getId() + ")");
+                        if (newLocation.getId().equals(paperchase.getClueList().get(currentClueId + 1).getLoc().getId())) {
+                            next(false);
+                        }
+                    }
                 }
             }
-        }
+        });
+
     }
 
     private void next(boolean debug){
