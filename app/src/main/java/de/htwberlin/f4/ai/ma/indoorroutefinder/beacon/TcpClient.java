@@ -287,6 +287,7 @@ public class TcpClient {
                                 }
 
                                 send(PROTOKOLL.sc_ok);
+                                mMessageListener.messageReceived("Datei Uebertragen");
                             } catch(Exception ex) {
                                 ex.printStackTrace();
                             }

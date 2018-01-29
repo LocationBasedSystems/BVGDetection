@@ -34,6 +34,7 @@ public class WiFiDirectConnector {
 
     //tmp
     Context context;
+    BeaconCallback caller;
 
     TcpClient mTcpClient;
     String servIp ="";
@@ -50,8 +51,9 @@ public class WiFiDirectConnector {
 
     public List<WifiP2pDevice> deviceList = new ArrayList<WifiP2pDevice>();
 
-    public WiFiDirectConnector(Context c){
+    public WiFiDirectConnector(Context c, BeaconCallback caller){
         this.context = c;
+        this.caller = caller;
         peerfilter = new IntentFilter(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
         connectionfilter = new IntentFilter(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
         p2pEnabled = new IntentFilter(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
@@ -118,6 +120,7 @@ public class WiFiDirectConnector {
             WifiP2pDevice tmp = iter.next();
             if (tmp.deviceName.equals("SharkTerminal-1")) {
                 Log.d(TAG, "about to connect to");
+                caller.receivedMessage("Connecting to Beacon");
                 Log.d(TAG, tmp.toString());
                 beaconObj = tmp;
                 Log.d(TAG, beaconObj.deviceAddress);
@@ -197,7 +200,8 @@ public class WiFiDirectConnector {
 
                                         //checkList();
 
-                                        showUserMessage("is GO");
+                                        //showUserMessage("is GO");
+                                        caller.receivedMessage("Role: Group Owner");
                                         wifiP2pManager.stopPeerDiscovery(wifiDirectChannel,actionListener);
 
                                         while(servIp.equals("")) {
@@ -224,7 +228,8 @@ public class WiFiDirectConnector {
                                     // If we're the client
                                     else{
                                         // TODO Initiate client socket.
-                                        showUserMessage("is CLI");
+                                        //showUserMessage("is CLI");
+                                        caller.receivedMessage("Role: Client");
                                         //Nicht gewollt
                                     }
                                 }
@@ -276,7 +281,11 @@ public class WiFiDirectConnector {
             //response received from server
             Log.d("test", "response " + values[0]);
             //process server response here....
-            showUserMessage(values[0]);
+            if(values[0].equals("Connection to Beacon established")){
+                caller.establishedConnection();
+            }
+            //showUserMessage(values[0]);
+            caller.receivedMessage(values[0]);
         }
 
     }

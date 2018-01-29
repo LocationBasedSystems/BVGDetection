@@ -7,15 +7,22 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import de.htwberlin.f4.ai.ma.indoorroutefinder.R;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.android.BaseActivity;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandler;
 import de.htwberlin.f4.ai.ma.indoorroutefinder.persistence.DatabaseHandlerFactory;
 
-public class BeaconMainActivity extends BaseActivity {
+public class BeaconMainActivity extends BaseActivity implements BeaconCallback {
 
     WiFiDirectConnector wifiConn;
+    TextView statusText;
+    TextView debugMessages;
+
+    Button buttonSend;
+    Button buttonReceive;
+    Button buttonAdmin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,10 +31,13 @@ public class BeaconMainActivity extends BaseActivity {
         getLayoutInflater().inflate(R.layout.activity_beacon_main, contentFrameLayout);
         setTitle("Beacon ");
 
-        wifiConn = new WiFiDirectConnector(getApplicationContext());
+        wifiConn = new WiFiDirectConnector(getApplicationContext(), this);
         wifiConn.initializeWiFiDirect();
 
-        final Button buttonSend = (Button)findViewById(R.id.beacon_send_data);
+        statusText = (TextView)findViewById(R.id.beacon_status_text);
+        debugMessages = (TextView)findViewById(R.id.beacon_message_dump);
+
+        buttonSend = (Button)findViewById(R.id.beacon_send_data);
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -35,7 +45,7 @@ public class BeaconMainActivity extends BaseActivity {
             }
         });
 
-        final Button buttonReceive = (Button)findViewById(R.id.beacon_receive_data);
+        buttonReceive = (Button)findViewById(R.id.beacon_receive_data);
         buttonReceive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -43,7 +53,7 @@ public class BeaconMainActivity extends BaseActivity {
             }
         });
 
-        final Button buttonAdmin = (Button)findViewById(R.id.beacon_request_admin);
+        buttonAdmin = (Button)findViewById(R.id.beacon_request_admin);
         buttonAdmin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,9 +67,6 @@ public class BeaconMainActivity extends BaseActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
                     wifiConn.discoverPeers();
-                    buttonSend.setEnabled(true);
-                    buttonReceive.setEnabled(true);
-                    buttonAdmin.setEnabled(true);
                 }
                 else{
                     buttonSend.setEnabled(false);
@@ -72,4 +79,24 @@ public class BeaconMainActivity extends BaseActivity {
     }
 
 
+    @Override
+    public void receivedFile() {
+
+    }
+
+    @Override
+    public void establishedConnection() {
+        statusText.setText("Beacon Verbunden");
+        buttonSend.setEnabled(true);
+        buttonReceive.setEnabled(true);
+        buttonAdmin.setEnabled(true);
+    }
+
+    @Override
+    public void receivedMessage(String message) {
+        debugMessages.append("\n" + message);
+        if(message.equals("Connecting to Beacon")){
+            statusText.setText("Verbinde zum Beacon...");
+        }
+    }
 }
