@@ -170,19 +170,14 @@ public class StartPaperchaseActivity extends AppCompatActivity implements Locati
     @Override
     public void onLocationChanged(final Node newLocation, LocationSource source) {
         if(newLocation!=null && paperchase!=null && paperchase.getClueList()!=null) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(StartPaperchaseActivity.this, "Aktuelle Position: " + newLocation.getId(), Toast.LENGTH_SHORT).show();
-                    navigateButton.setEnabled(true);
-                    oldLocId=newLocation.getId();
-                    if (newLocation.getId().equals(paperchase.getClueList().get(0).getLoc().getId())) {
-                        beginButton.setEnabled(true);
-                    } else {
-                        beginButton.setEnabled(false);
-                    }
-                }
-            });
+            Toast.makeText(StartPaperchaseActivity.this, "Aktuelle Position: " + newLocation.getId(), Toast.LENGTH_SHORT).show();
+            navigateButton.setEnabled(true);
+            oldLocId=newLocation.getId();
+            if (newLocation.getId().equals(paperchase.getClueList().get(0).getLoc().getId())) {
+                beginButton.setEnabled(true);
+            } else {
+                beginButton.setEnabled(false);
+            }
 
 
         }
